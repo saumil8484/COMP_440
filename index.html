@@ -14,31 +14,31 @@
                     <button type="button" id="logintab">Log In</button>
                     <button type="button" id="signuptab" class="disable">Sign Up</button>
                 </div>
-                <form>
+                <form name="RegForm" method="post">
                     <div class="input-group">
                         <div class="input-field" id="firstname">
                             <i class="fa-solid fa-user"></i>
-                            <input type="text" placeholder="First Name">
+                            <input type="text" placeholder="First Name" name="fname">
                         </div>
                         <div class="input-field" id="lastname">
                             <i class="fa-solid fa-user"></i>
-                            <input type="text" placeholder="Last Name">
+                            <input type="text" placeholder="Last Name" name="lname">
                         </div>
                         <div class="input-field" id="email">
                             <i class="fa-solid fa-envelope"></i>
-                            <input type="email" placeholder="Email">
+                            <input type="email" placeholder="Email" name="mail">
                         </div>
                         <div class="input-field" id="username">
                             <i class="fa-solid fa-at"></i>
-                            <input type="text" placeholder="Username">
+                            <input type="text" placeholder="Username" name="uname">
                         </div>
                         <div class="input-field" id="Pass">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" placeholder="Password">
+                            <input type="password" placeholder="Password" name="password">
                         </div>
                         <div class="input-field" id="confirmPass">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" placeholder="Confirm Password">
+                            <input type="password" placeholder="Confirm Password" name="confirmpassword">
                         </div>
                         <div class="btn-field">
                             <button type="button" id="signupbtn">Sign Up</button>
@@ -79,6 +79,101 @@
                 loginbtn.style.maxHeight ="0";
                 logintab.classList.add("disable");
                 signuptab.classList.remove("disable");
+            }
+
+            signupbtn.onclick = function(){
+                var fname = document.forms.RegForm.fname.value;
+                var lname = document.forms.RegForm.lname.value;
+                var mail = document.forms.RegForm.mail.value;
+                var uname = document.forms.RegForm.uname.value;
+                var password = document.forms.RegForm.password.value;
+                var confirmpassword = document.forms.RegForm.confirmpassword.value;
+                var regEmail=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;  
+ 
+                if (fname == "") {
+                    window.alert("Please enter your first name properly.");
+                    return false;
+                }
+            
+                else if (lname == "") {
+                    window.alert("Please enter your last name properly.");
+                    return false;
+                }
+                
+                else if (mail == "" || !regEmail.test(mail)) {
+                    window.alert("Please enter a valid e-mail address.");
+                    return false;
+                }
+
+                // Insert condition to check email in database
+                /*else if (mail == "") {
+                    window.alert("This email address is already registered. Please use another email address.");
+                    return false;
+                }*/
+
+                else if (uname == "") {
+                    window.alert("Please enter your user name properly.");
+                    return false;
+                }
+
+                // Insert condition to check username in database
+                /*else if (mail == "") {
+                    window.alert("This username is already registered. Please use another username.");
+                    return false;
+                }*/
+                
+                else if (password == "") {
+                    alert("Please enter your password");
+                    return false;
+                }
+            
+                else if(password.length <6){
+                    alert("Password should be atleast 8 character long");
+                    return false;
+            
+                }
+
+                else if (confirmpassword == "") {
+                    window.alert("Please confirm password.");
+                    return false;
+                }
+
+                else if (confirmpassword != password) {
+                    window.alert("Passwords does not match !");
+                    return false;
+                }
+            
+                else{
+                    //Post the form data into Database
+                    window.alert("Successfully Signed Up !");
+                    location.reload(true);
+                    return true;
+                }
+            }
+
+            loginbtn.onclick = function(){ 
+                var uname1 = document.forms.RegForm.uname.value;
+                var password1 = document.forms.RegForm.password.value;
+                if (uname1 == "") {
+                    window.alert("Please enter your user name properly.");
+                    return false;
+                }
+                
+                else if (password1 == "") {
+                    alert("Please enter your password.");
+                    return false;
+                }
+
+                //Insert condition to check username and password in database by changing next line into else if
+                else{ 
+                    location.href="home.html";
+                    return true;
+                }
+
+                /*else () {
+                    alert("Invalid username or password.");
+                    return false;
+                }*/
             }
         </script>
     </body>
