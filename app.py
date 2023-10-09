@@ -43,29 +43,22 @@ def index():
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
-        Fname = request.form['firstname']
-        Lname = request.form['lastname']
+        try:
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+            Fname = request.form['firstname']
+            Lname = request.form['lastname']
 
-        # Check if the username already exists in the database
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            return jsonify(error="Username already exists. Please choose another username.")
-        
-        # Check if the email already exists in the database
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify(error="Email already exists. Please choose another email.")
+            if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
+                return jsonify(error="Invalid Input")
 
-        if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
-            return jsonify(error="Invalid Input")
-
-        new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
-        db.session.add(new_user)
-        db.session.commit()
-        return jsonify(message="Registration successful. You can now login.", success=True)
+            new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
+            db.session.add(new_user)
+            db.session.commit()
+            return jsonify(message="Registration successful. You can now login.", success=True)
+        except Exception as e:
+            return jsonify(message="Registration unsuccessful. Reason: " + str(e), success=False)
 
 @app.route('/login', methods=['POST'])
 def login():
