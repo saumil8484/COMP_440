@@ -1,11 +1,15 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-import re
 
-app = Flask(__name__)
+import flask as f
+import flask_sqlalchemy as fsa
+import re
+from flask_cors import CORS
+
+
+app = f.Flask(__name__)
+CORS(app) # enable cross origin resource sharing (for now only for testing purposes!)
 app.secret_key = 'applebeepie' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-db = SQLAlchemy(app)
+db = fsa.SQLAlchemy(app)
 
 def is_sql_injection(input_string):
     # Define a list of common SQL injection keywords, patterns, and attack strings
@@ -26,7 +30,7 @@ def is_sql_injection(input_string):
     else:
         return False
 
-#if(is_sql_injection(username)==True):
+
 class User(db.Model):
     __tablename__ = 'users' 
     
@@ -38,43 +42,43 @@ class User(db.Model):
 
 @app.route('/')
 def index():
-    return jsonify(message="Welcome to the Login and Registration System", success=True)
+    return f.jsonify(message="Welcome to the Login and Registration System", success=True)
 
 @app.route('/register', methods=['POST'])
 def register():
-    if request.method == 'POST':
+    if f.request.method == 'POST':
         try:
-            username = request.form['username']
-            password = request.form['password']
-            email = request.form['email']
-            Fname = request.form['firstname']
-            Lname = request.form['lastname']
+            username = f.request.form['username']
+            password = f.request.form['password']
+            email = f.request.form['email']
+            Fname = f.request.form['firstname']
+            Lname = f.request.form['lastname']
 
             if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
-                return jsonify(error="Invalid Input")
+                return f.jsonify(error="Invalid Input")
 
             new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
             db.session.add(new_user)
             db.session.commit()
-            return jsonify(message="Registration successful. You can now login.", success=True)
+            return f.jsonify(message="Registration successful. You can now login.", success=True)
         except Exception as e:
-            return jsonify(message="Registration unsuccessful. Reason: " + str(e), success=False)
+            return f.jsonify(message="Registration unsuccessful. Reason: " + str(e), success=False)
 
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    if f.request.method == 'POST':
+        username = f.request.form['username']
+        password = f.request.form['password']
         print("username: " + username + " password: " + password)
         print("is_sql_injection(username): " + str(is_sql_injection(username)) + " is_sql_injection(password): " + str(is_sql_injection(password)))
         if is_sql_injection(username) and is_sql_injection(password):
-            return jsonify(error="Invalid Input", success=False)
+            return f.jsonify(error="Invalid Input", success=False)
         else:
             user = User.query.filter_by(username=username, password=password).first()
             if user:
-                return jsonify(message="Login successful!", success=True)
+                return f.jsonify(message="Login successful!", success=True)
             else:
-                return jsonify(error="Invalid credentials. Please try again.", success=False)
+                return f.jsonify(error="Invalid credentials. Please try again.", success=False)
 
 if __name__ == '__main__':
     with app.app_context():
