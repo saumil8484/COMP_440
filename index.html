@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -88,7 +89,7 @@
                 var uname = document.forms.RegForm.uname.value;
                 var password = document.forms.RegForm.password.value;
                 var confirmpassword = document.forms.RegForm.confirmpassword.value;
-                var regEmail=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;  
+                var regEmail=/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/g;  
  
                 if (fname == "") {
                     window.alert("Please enter your first name properly.");
@@ -129,37 +130,42 @@
                     window.alert("Passwords does not match !");
                     return false;
                 }
-            
+                
                 else{
-                    const data = {
-                        firstname: fname,
-                        lastname: lname,
-                        email: mail,
-                        username: uname,
-                        password: password
-                    };
+                    const formParams = new URLSearchParams();
+                    formParams.append('username', uname);
+                    formParams.append('password', password);
+                    formParams.append('email', mail);
+                    formParams.append('firstname', fname);
+                    formParams.append('lastname', lname);
+                    console.log(formParams);
 
-                    postData("URL", data) //Add URL
-                        .then((response) => {
-                            console.log(response);
-                        })
-                        .catch((error) => {
-                            console.error("Error:", error);
-                        });
-
-
-                    async function postData(url = "", data = {}) {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(data)
-                        });
-
-                        return await response.json();
-                    }
-                    location.reload(true);
+                    fetch('http://127.0.0.1:5000/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formParams.toString()
+                    })
+                    .then(response => response.json()) 
+                    .then(data => {
+                        // Handle the response data here
+                        console.log(data);
+                        if(data.success == false)
+                        {
+                            window.alert ("Email or username is already used");
+                            return false;
+                        }
+                        else if(data.success == true)
+                        {
+                            location.reload();
+                            return true;
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                     return true;
                 }
             }
@@ -178,32 +184,37 @@
                 }
 
                 else {
-                    const data = {
-                        username: uname1,
-                        password: password1
-                    };
+                    const formParams = new URLSearchParams();
+                    formParams.append('username', uname1);
+                    formParams.append('password', password1);
+                    console.log(formParams);
 
-                    postData("URL", data) //Add URL
-                        .then((response) => {
-                            console.log(response);
-                        })
-                        .catch((error) => {
-                            console.error("Error:", error);
-                        });
-
-
-                    async function postData(url = "", data = {}) {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(data)
-                        });
-
-                        return await response.json();
-                    }
-                    location.href="home.html";
+                    fetch('http://127.0.0.1:5000/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formParams.toString()
+                    })
+                    .then(response => response.json()) 
+                    .then(data => {
+                        // Handle the response data here
+                        console.log(data);
+                        if(data.success == false)
+                        {
+                            window.alert ("Invalid Username or password");
+                            return false;
+                        }
+                        else if(data.success == true)
+                        {
+                            location.href="home.html";
+                            return true;
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                     return true;
                 }
             }
