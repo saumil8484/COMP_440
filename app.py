@@ -4,9 +4,11 @@ import flask_sqlalchemy as fsa
 import re
 from flask_cors import CORS
 
+import datetime
 
-app = f.Flask(__name__)
-CORS(app) # enable cross origin resource sharing (for now only for testing purposes!)
+
+app = Flask(__name__)
+CORS(app)
 app.secret_key = 'applebeepie' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = fsa.SQLAlchemy(app)
@@ -31,14 +33,50 @@ def is_sql_injection(input_string):
         return False
 
 
+# =================================== SQLite Database Models ===================================================
 class User(db.Model):
     __tablename__ = 'users' 
     
+    u_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
     password = db.Column(db.String(200), nullable=False)
     email=db.Column(db.String(80),unique=True, nullable=False)
     firstname=db.Column(db.String(80), nullable=False)
     lastname= db.Column(db.String(80),nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+class Item(db.Model):
+    __tablename__ = 'items'
+
+    item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200), unique=True, nullable=False)
+    description = db.Column(db.String(1000), unique=False, nullable=False)
+    category = db.Column(db.String(500), unique=False, nullable=False)
+    price = db.Column(db.Integer, unique=False, nullable=False)
+    u_id = db.Column(db.Integer, unique=False, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+
+    review_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rating = db.Column(db.String(9), unique=False, nullable=False)
+    description = db.Column(db.String(1000), unique=True, nullable=False)
+    item_id = db.Column(db.Integer, unique=True, nullable=False)
+    u_id = db.Column(db.Integer, unique=True, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+class ActionCounter(db.Model):
+    __tablename__ = 'action_counter'
+
+    u_id = db.Column(db.Integer, unique=True, nullable=False)
+    daily_item_count = db.Column(db.Integer, unique=False, nullable=False)
+    last_item_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    review_count = db.Column(db.Integer, unique=False, nullable=False)
+    last_review_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+# ======================================== APIs ================================================================
+    
 
 @app.route('/')
 def index():
