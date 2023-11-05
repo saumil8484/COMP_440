@@ -51,7 +51,9 @@ class Item(db.Model):
     item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), unique=True, nullable=False)
     description = db.Column(db.String(1000), unique=False, nullable=False)
-    category = db.Column(db.String(500), unique=False, nullable=False)
+    Pcategory = db.Column(db.String(500), unique=False, nullable=False)
+    Scategory=  db.Column(db.String(500), unique=False, nullable=False)
+    Tcategory=  db.Column(db.String(500), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     u_id = db.Column(db.Integer, unique=False, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -75,8 +77,90 @@ class ActionCounter(db.Model):
     review_count = db.Column(db.Integer, unique=False, nullable=False)
     last_review_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-# ======================================== APIs ================================================================
+# =================================== Initialize Database ===================================================
+def initilize_Database():
+#   ------------------------------------User Table-----------------------------------------------------------
+    userinsert=[[1,"John","John123","John@gmail.com","John","Smith","2023-11-03 08:40:00"],
+       [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson","2023-11-02 10:40:00"],
+       [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams","2023-10-30 18:40:00"],
+       [4,"David","David3","David@gmail.com","David","Brown","2023-10--31 11:40:00"],
+       [5,"Emily","Emily112","Emily@gmail.com","Emily","Davis","2023-11-01 15:40:00"],
+       ]
+    for i in range(0,len(userinsert())):
+        newUser = User(u_id=userinsert[i][0],
+                       username=userinsert[i][1],
+                       password=userinsert[i][2],
+                       email=userinsert[i][3],
+                       firstname=userinsert[i][4],
+                       lastname=userinsert[i][5],
+                       date_created=userinsert[i][6])
+
+#   ------------------------------------ Items Table---------------------------------------------------------
+    itemsInsert=[[1,"Watch","Analog Watch","Watches","Analog","Lether",750,1,"2023-11-03 18:40:00"],
+                 [2,"Watch","Digital Watch","Watches","Digital","Metal",950,1,"2023-11-03 19:40:00"],
+                 [3,"Smartphone","This is new iPhone 15.","Electronics","Cellphone","Apple",1050,2,"2023-11-02 11:40:00"],
+                 [4,"Shoes","All New authentic Jordan 1","Shoes","Nike","Jordan",250,3,"2023-10-30 19:40:00"],
+                 [5,"Shoes","New Designs for Air force ","Shoes","Nike","Air Force",80,3,"2023-10-30 :40:00"],
+                 [6,"Furniture","Stylish Modern table Designed by professional","Furniture","Tables","Wooden",200,4,"2023-10--31 13:40:00"],
+                 [7,"Games","Latest games for PC, Xbox and PS5","Games","FPS","RPG",50,5,"2023-11-01 17:40:00"],
+                 ]
+    i=0
+    for i in range(0,len(itemsInsert())):
+        newItem = Item(u_id=itemsInsert[i][0],
+                       username=itemsInsert[i][1],
+                       password=itemsInsert[i][2],
+                       email=itemsInsert[i][3],
+                       firstname=itemsInsert[i][4],
+                       lastname=itemsInsert[i][5],
+                       date_created=itemsInsert[i][6])
+
+#   ------------------------------------ Review Table--------------------------------------------------------
+    reviewInsert=[[1,"Excellent","Best Quality and Great Service",4,3,"2023-11-2 12:40:00"],
+                  [2,"Good","Good Quality",3,5,"2023-11-3 14:40:00"],
+                  [3,"Good","Not Great Quality but Good Service",7,4,"2023-11-4 19:40:00"],
+                  [4,"Fair","Good Quality but Not so good Service",5,4,"2023-11-4 20:40:00"],
+                  [5,"Poor","Disapointing Service",6,1,"2023-11-5 17:40:00"]
+                  ]
+    i=0
+    for i in range(0,len(reviewInsert())):
+        newReview = Review( u_id=reviewInsert[i][0],
+                          username=reviewInsert[i][1],
+                          password=reviewInsert[i][2],
+                          email=reviewInsert[i][3],
+                          firstname=reviewInsert[i][4],
+                          lastname=reviewInsert[i][5]
+                         )
+                       
+#   ------------------------------------ ActionCounter Table-------------------------------------------------
+    ActionInsert=[[1,2,"2023-11-03 19:40:00",1,"2023-11-5 17:40:00"],
+                  [2,1,"2023-11-02 11:40:00",0,""],
+                  [3,2,"2023-10-30 :40:00",1,"2023-11-2 12:40:00"],
+                  [4,1,"2023-10--31 13:40:00",2,"2023-11-4 20:40:00"],
+                  [5,1,"2023-11-01 17:40:00",1,"2023-11-3 14:40:00"]
+                  ]
+    i=0
+    for i in range(0,len(ActionInsert())):
+        newAction = ActionCounter( u_id=ActionInsert[i][0],
+                                 username=ActionInsert[i][1],
+                                 password=ActionInsert[i][2],
+                                 email=ActionInsert[i][3],
+                                 firstname=ActionInsert[i][4]
+                                 )
+#   ------------------------------------ Commiting ----------------------------------------------------------    
+    db.session.add(newUser)
+    db.session.add(newItem)
+    db.session.add(newReview)
+    db.session.add(newAction)
+    db.session.commit()
     
+    
+    return f.jsonify(message="Database Initilization completed")
+# ======================================== APIs =============================================================
+
+
+
+# db.session.add(user)
+# db.session.commit()
 
 @app.route('/')
 def index():
