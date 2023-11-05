@@ -73,9 +73,9 @@ class ActionCounter(db.Model):
 
     u_id = db.Column(db.Integer, unique=True, nullable=False)
     daily_item_count = db.Column(db.Integer, unique=False, nullable=False)
-    last_item_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    first_item_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     review_count = db.Column(db.Integer, unique=False, nullable=False)
-    last_review_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    first_review_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 # =================================== Initialize Database ===================================================
 def initilize_Database():
