@@ -154,13 +154,11 @@ def initilize_Database():
     db.session.commit()
     
     
-    return f.jsonify(message="Database Initilization completed")
+    return f.jsonify(message="Database Initilization completed", success=True)
 # ======================================== APIs =============================================================
 
 
 
-# db.session.add(user)
-# db.session.commit()
 
 @app.route('/')
 def index():
@@ -201,6 +199,37 @@ def login():
                 return f.jsonify(message="Login successful!", success=True)
             else:
                 return f.jsonify(error="Invalid credentials. Please try again.", success=False)
+#-----------------------------------------------------API Post items---------------------------------------------
+@app.route('/home',methods=['POST'])
+def addItems():
+    if f.request.method== ['POST']:
+        timeLimit=ActionCounter.first_item_time + datetime.datetime.timedelta(days=1)
+        if ActionCounter.daily_item_count<4 or (ActionCounter.daily_item_count>3 and ActionCounter.first_item_time> timeLimit):
+            try:
+                title = f.request.form['title']
+                description = f.request.form['description']
+                Pcategory = f.request.form['primary_category']
+                Scategory = f.request.form['sub_category1']
+                Tcategory = f.request.form['sub_category2']
+                price = f.request.form['price']
+
+                item=Item( 
+                    title=title,
+                    description=description,
+                    primary_category=Pcategory,
+                    sub_category1=Scategory,
+                    sub_category2=Tcategory,
+                    price=price,
+                    owner_id=User.get_current_user().u_id
+                )
+                db.session.add(item)
+                db.session.commit()
+                return f.jsonify(message="Item Added.", success=True)
+            except Exception as e:
+                return f.jsonify(message="Unable to add item. Reason: " + str(e), success=False)
+        else:
+            return f.jsonify(message="You have reached the limit of item that can be posted in a day " , success=False)
+            
 
 if __name__ == '__main__':
     with app.app_context():
