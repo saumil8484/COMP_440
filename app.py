@@ -1,13 +1,13 @@
-
+from flask import Flask
 import flask as f
 import flask_sqlalchemy as fsa
 import re
 from flask_cors import CORS
+from collections import OrderedDict
 
-import datetime
+from datetime import datetime, time, timedelta
 
-
-app = Flask(__name__)
+app = f.Flask(__name__)
 CORS(app)
 app.secret_key = 'applebeepie' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -126,17 +126,31 @@ def login():
 @app.route('/addItems',methods=['POST'])
 def addItems():
     if f.request.method== ['POST']:
-        timeLimit=ActionCounter.first_item_time + datetime.datetime.timedelta(days=1)
-        if ActionCounter.daily_item_count<4 or (ActionCounter.daily_item_count>3 and ActionCounter.first_item_time> timeLimit):
-            try:
-                title = f.request.form['title']
-                description = f.request.form['description']
-                Pcategory = f.request.form['primary_category']
-                Scategory = f.request.form['sub_category1']
-                Tcategory = f.request.form['sub_category2']
-                price = f.request.form['price']
+        title = f.request.form['title']
+        description = f.request.form['description']
+        Pcategory = f.request.form['primary_category']
+        Scategory = f.request.form['sub_category1']
+        Tcategory = f.request.form['sub_category2']
+        price = f.request.form['price']  
+          
+        action_counter = ActionCounter.query.filter_by(u_id=User.get_current_user().u_id).first()
+        post_was_today= False
+        if action_counter:
+          # Get the current date and time
+          current_datetime = datetime.now()
+        
+          # Extract the current date (midnight) and the end of the day (23:59:59)
+          current_date = current_datetime.date()
+          start_of_day = datetime.combine(current_date, time.min)
+          end_of_day = datetime.combine(current_date, time.max)
 
-                item=Item( 
+          # check if post was today
+          post_was_today = start_of_day <= action_counter.first_item_time <= end_of_day
+          if action_counter.daily_item_count >= 3 and post_was_today:
+              return f.jsonify(message="You have reached the limit of item that can be posted in a day", success=False)
+        
+        # Save Post
+        item=Item( 
                     title=title,
                     description=description,
                     primary_category=Pcategory,
@@ -145,13 +159,28 @@ def addItems():
                     price=price,
                     owner_id=User.get_current_user().u_id
                 )
-                db.session.add(item)
-                db.session.commit()
-                return f.jsonify(message="Item Added.", success=True)
-            except Exception as e:
-                return f.jsonify(message="Unable to add item. Reason: " + str(e), success=False)
+        db.session.add(item) 
+
+        if action_counter:
+            if post_was_today:
+                action_counter.daily_item_count = action_counter.daily_item_count + 1
+            else:
+                # review older than day, so reset counter to 1 and current timestamp to today
+                action_counter.daily_item_count = 1
+                action_counter.first_item_time = datetime.now()
         else:
-            return f.jsonify(message="You have reached the limit of item that can be posted in a day " , success=False)
+            # this is first time so create new action counter
+            new_action_counter = ActionCounter(u_id=User.get_current_user().u_id,
+                                           daily_item_count=1,
+                                           first_item_time=datetime.now() - timedelta(hours=24),
+                                           review_count=0,
+                                           first_review_time=datetime.now()
+                                           )
+            db.session.add(new_action_counter)
+        db.session.commit()
+         # send confirmation
+        return f.jsonify(message="Item posted.", success=True)
+
 # =================================== Initialize Database ===================================================
 
 @app.route('/initDatabase',methods=['POST'])
