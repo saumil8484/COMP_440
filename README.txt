@@ -1,3 +1,13 @@
+Inorder to run the project,
+
+First run the flask server using 
+
+python app.py
+
+Then use the UI by opening index.html.
+
+
+Phase 1
 Omkar Lubal 
 - Created SQLite User Model
 - Building login API and testing using Postman
@@ -10,3 +20,17 @@ Nevil Shingala
 - Building SignUp API
 - Testing frontend with backend server
 - Video Creation and presentation
+
+
+Phase 2
+Omkar Lubal
+- Created DB models with required contraints
+- Created Review and Search API
+Saumil Patel
+- Build Frontend for Search
+- Build Frontend for Create Item and Create Review
+Nevil Shingala
+- Created Initialize DB API
+- Created add item API
+
+
