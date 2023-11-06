@@ -4,6 +4,7 @@ import flask_sqlalchemy as fsa
 import re
 from flask_cors import CORS
 from collections import OrderedDict
+import json
 
 from datetime import datetime, time, timedelta
 
@@ -199,7 +200,7 @@ def login():
         else:
             user = User.query.filter_by(username=username, password=password).first()
             if user:
-                return f.jsonify(message="Login successful!", success=True)
+                return f.jsonify(user_id=user.u_id, success=True)
             else:
                 return f.jsonify(error="Invalid credentials. Please try again.", success=False)
 
@@ -273,13 +274,14 @@ def search_category():
                 ("Scategory", item.Scategory),
                 ("Tcategory", item.Tcategory),
                 ("price", item.price),
-                ("u_id", item.u_id),
-                ("date_created", str(item.date_created) if item.date_created else None),
             ])
             for item in items
         ]
 
-        return f.jsonify(items=serialized_items)
+        # return f.jsonify(items=serialized_items)
+        response_data = json.dumps(serialized_items, indent=4, ensure_ascii=False, sort_keys=False)
+
+        return response_data
 
 if __name__ == '__main__':
     with app.app_context():
