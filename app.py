@@ -1,11 +1,11 @@
-
+from flask import Flask
 import flask as f
 import flask_sqlalchemy as fsa
 import re
 from flask_cors import CORS
+from collections import OrderedDict
 
-import datetime
-
+from datetime import datetime, time, timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -38,7 +38,7 @@ class User(db.Model):
     __tablename__ = 'users' 
     
     u_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     email=db.Column(db.String(80),unique=True, nullable=False)
     firstname=db.Column(db.String(80), nullable=False)
@@ -63,14 +63,15 @@ class Review(db.Model):
 
     review_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     rating = db.Column(db.String(9), unique=False, nullable=False)
-    description = db.Column(db.String(1000), unique=True, nullable=False)
+    description = db.Column(db.String(1000), unique=False, nullable=False)
     item_id = db.Column(db.Integer, unique=True, nullable=False)
-    u_id = db.Column(db.Integer, unique=True, nullable=False)
+    u_id = db.Column(db.Integer, unique=False, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 class ActionCounter(db.Model):
     __tablename__ = 'action_counter'
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     u_id = db.Column(db.Integer, unique=True, nullable=False)
     daily_item_count = db.Column(db.Integer, unique=False, nullable=False)
     first_item_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -201,6 +202,84 @@ def login():
                 return f.jsonify(message="Login successful!", success=True)
             else:
                 return f.jsonify(error="Invalid credentials. Please try again.", success=False)
+
+@app.route('/review', methods=['POST'])
+def post_review():
+    if f.request.method == 'POST':
+        u_id = f.request.form['u_id']
+        item_id = f.request.form['item_id']
+        rating = f.request.form['rating']
+        description = f.request.form['description']
+        print("Saving review: item_id: " + item_id + " rating: " + rating + " description: " + description)
+
+        # Check if limit is exceeded or already reviewed this product
+        review = Review.query.filter_by(item_id=item_id, u_id=u_id).first()
+        if review:
+            return f.jsonify(message="This User's review already exists for this product.", success=False)
+        
+        action_counter = ActionCounter.query.filter_by(u_id=u_id).first()
+        review_was_today = False
+        if action_counter:
+            # Get the current date and time
+            current_datetime = datetime.now()
+
+            # Extract the current date (midnight) and the end of the day (23:59:59)
+            current_date = current_datetime.date()
+            start_of_day = datetime.combine(current_date, time.min)
+            end_of_day = datetime.combine(current_date, time.max)
+
+            # check if review was today
+            review_was_today = start_of_day <= action_counter.first_review_time <= end_of_day
+            if action_counter.review_count >= 3 and review_was_today:
+                return f.jsonify(message="You can only post 3 reviews in 24 hrs.", success=False)
+
+        # Save review
+        new_review = Review(rating=rating, description=description, item_id=item_id, u_id=u_id)
+        db.session.add(new_review)
+
+        if action_counter:
+            if review_was_today:
+                action_counter.review_count = action_counter.review_count + 1
+            else:
+                # review older than day, so reset counter to 1 and current timestamp to today
+                action_counter.review_count = 1
+                action_counter.first_review_time = datetime.now()
+        else:
+            # this is first time so create new action counter
+            new_action_counter = ActionCounter(u_id=u_id,
+                                           daily_item_count=0,
+                                           first_item_time=datetime.now() - timedelta(hours=24),
+                                           review_count=1,
+                                           first_review_time=datetime.now()
+                                           )
+            db.session.add(new_action_counter)
+        db.session.commit()
+
+        # send confirmation
+        return f.jsonify(message="Review posted.", success=True)
+
+@app.route('/search', methods=['POST'])
+def search_category():
+    if f.request.method == 'POST':
+        category = f.request.form['category']
+
+        items = Item.query.filter_by(Pcategory=category).all()
+        serialized_items = [
+            OrderedDict([
+                ("item_id", item.item_id),
+                ("title", item.title),
+                ("description", item.description),
+                ("Pcategory", item.Pcategory),
+                ("Scategory", item.Scategory),
+                ("Tcategory", item.Tcategory),
+                ("price", item.price),
+                ("u_id", item.u_id),
+                ("date_created", str(item.date_created) if item.date_created else None),
+            ])
+            for item in items
+        ]
+
+        return f.jsonify(items=serialized_items)
 
 if __name__ == '__main__':
     with app.app_context():
