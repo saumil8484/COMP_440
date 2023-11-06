@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="vertical-menu">
-            <p class="home_tab" onclick="homepage()">Home </p>
+            <p href="#home" class="home_tab" onclick="homepage()">Home </p>
             <a href="#post" onclick="post_item()">Post an item</a>
             <a href="#search" onclick="search_category()">Search a category</a>
             <a href="#intialise" onclick="initialise_database()">Initialise Database</a>
@@ -55,67 +55,58 @@
             </div>
 
             <div id="search_category" style="display: none;">
-                <h2>Search a Category</h2>
-                <form name="RegForm" method="post" id="search_form">
-                    <div class="input-group">
-                        <div class="input-field" id="search">
-                            <input type="text" placeholder="Type a category..." name="search">
+                <div id="search_form" style="display: block;">
+                    <h2>Search a Category</h2>
+                    <form name="searchForm" method="post" id="search_form">
+                        <div class="input-group">
+                            <div class="input-field" id="search">
+                                <input type="text" placeholder="Type a category..." name="search">
+                            </div>
+                            <div class="btn-field">
+                                <button type="button" id="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
                         </div>
-                        <div class="btn-field">
-                            <button type="button" id="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
+                    </form><br><br>
+                    <div id="show_searched_category" style="display:none">
+                    <table style="width: 95%;">
+                        <thead>
+                            <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Primary Category</th>
+                            <th>Sub Category 1</th>
+                            <th>Sub Category 2</th>
+                            <th>Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_output">
+                            
+                        </tbody>
+                    </table>
                     </div>
-                </form><br><br>
-                <table style="width: 95%;">
-                    <tr>
-                      <th>Title</th>
-                      <th>Description</th>
-                      <th>Primary Category</th>
-                      <th>Sub Category 1</th>
-                      <th>Sub Category 2</th>
-                      <th>Price ($)</th>
-                    </tr>
-                    <tr>
-                      <td>Smartphone</td>
-                      <td>This is new iPhone 15.</td>
-                      <td>Electronics</td>
-                      <td>CellPhone</td>
-                      <td>Apple</td>
-                      <td>1200</td>
-                    </tr>
-                    <tr>
-                       <td>Smartphone</td>
-                       <td>This is new iPhone 15.</td>
-                       <td>Electronics</td>
-                       <td>CellPhone</td>
-                       <td>Apple</td>
-                       <td>1200</td>
-                    </tr>
-                    <tr>
-                       <td>Smartphone</td>
-                       <td>This is new iPhone 15.</td>
-                       <td>Electronics</td>
-                       <td>CellPhone</td>
-                       <td>Apple</td>
-                       <td>1200</td>
-                    </tr>
-                    <tr>
-                       <td>Smartphone</td>
-                       <td>This is new iPhone 15.</td>
-                       <td>Electronics</td>
-                       <td>CellPhone</td>
-                       <td>Apple</td>
-                       <td>1200</td>
-                    </tr>
-                    <tr>
-                       <td>Smartphone</td>
-                       <td>This is new iPhone 15.</td>
-                       <td>Electronics</td>
-                       <td>CellPhone</td>
-                       <td>Apple</td>
-                       <td>1200</td>
-                    </tr>
-                  </table>
+                </div>
+
+                <div id="review_item" style="display: none;">
+                    <h2>Give a review</h2>
+                    <form name="ReviewForm" method="post" id="review_item_form">
+                        <div class="input-group">
+                            <input class="input-field" placeholder="Select a review" list="review_dropdown" name="review_dropdown">
+                            <datalist id="review_dropdown">
+                                <option value="Excellent">
+                                <option value="Good">
+                                <option value="Fair">
+                                <option value="Poor">
+                            </datalist>
+                            <div class="input-field" id="review_description" name="review_description">
+                                <textarea placeholder="Description of review" name="review_description"></textarea>
+                            </div>
+                            <div class="btn-field">
+                                <button type="button" id="backbtn">Back</button>
+                                <button type="button" id="submit_review_btn">Submit Review</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div id="initialise_database" style="display: none;">
@@ -125,116 +116,6 @@
             </div>
         </div>
 
-        <script>
-            let welcome_page = document.getElementById("welcome_page");
-            let post_item_section = document.getElementById("post_item");
-            let search_category_section = document.getElementById("search_category");
-            let initialise_database_section = document.getElementById("initialise_database");
-
-            function homepage(){
-                welcome_page.style.display= 'block';
-                post_item_section.style.display = 'none';
-                search_category_section.style.display= 'none';
-                initialise_database_section.style.display= 'none';
-            }
-            
-            function post_item(){
-                welcome_page.style.display= 'none';
-                post_item_section.style.display = 'block';
-                search_category_section.style.display= 'none';
-                initialise_database_section.style.display= 'none';
-            }
-
-            function search_category(){
-                welcome_page.style.display= 'none';
-                post_item_section.style.display = 'none';
-                search_category_section.style.display= 'block';
-                initialise_database_section.style.display= 'none';
-            }
-
-            function initialise_database(){
-                welcome_page.style.display= 'none';
-                post_item_section.style.display = 'none';
-                search_category_section.style.display= 'none';
-                initialise_database_section.style.display= 'block';
-            }
-
-            function logout(){ 
-                location.href="index.html";
-            }
-
-            submitbtn.onclick = function(){
-                var title = document.forms.RegForm.title.value;
-                var description = document.forms.RegForm.description.value;
-                var primary_category = document.forms.RegForm.primary_category.value;
-                var sub_category1 = document.forms.RegForm.sub_category1.value;
-                var sub_category2 = document.forms.RegForm.sub_category2.value;
-                var price = document.forms.RegForm.price.value;
-                var post_item_form = document.getElementById("post_item_form");
-
-                if (title == "") {
-                    window.alert("Please enter title of the item !");
-                    return false;
-                }
-
-                else if (description == "") {
-                    window.alert("Please enter description of the item !");
-                    return false;
-                }
-
-                else if (primary_category == "") {
-                    window.alert("Please enter primary category of the item !");
-                    return false;
-                }
-                
-                else if (price == "") {
-                    window.alert("Please enter price of the item !");
-                    return false;
-                }
-                
-                else{
-                    const formParams = new URLSearchParams();
-                    formParams.append('title', title);
-                    formParams.append('description', description);
-                    formParams.append('primary_category', primary_category);
-                    formParams.append('sub_category1', sub_category1);
-                    formParams.append('sub_category2', sub_category2);
-                    formParams.append('price', price);
-                    console.log(formParams);
-
-                    //Change the URL
-                    fetch('http://127.0.0.1:5000/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: formParams.toString()
-                    })
-                    .then(response => response.json()) 
-                    .then(data => {
-                        // Handle the response data here
-                        console.log(data);
-                        if(data.success == false)
-                        {
-                            window.alert ("You cannot post items more than 3 times per day !");
-                            return false;
-                        }
-                        else if(data.success == true)
-                        {
-                            window.alert ("Your item has been successfully posted !");
-                            post_item_form.reset();
-                            return true;
-                        }
-                        
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                    return true;
-                }
-            }
-
-            
-        </script>
+        <script type="text/javascript" src="home.js"></script>
     </body>
 </html>

@@ -114,7 +114,7 @@ input{
 .vertical-menu {
     float: left;
     width: 200px;
-    height: 100%;
+    height: 1000px;
     background-color: #c2ccf0;
 }
 
@@ -153,6 +153,20 @@ div[name="description"]{
 }
 
 textarea[name="description"] {
+    width: 100%;
+    height: 100px;
+    background: #eaeaea;
+    margin: 15px 0;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    transition: max-height 0.5s;
+    overflow: hidden;
+    outline: none;
+    border: none;
+}
+
+textarea[name="review_description"] {
     width: 100%;
     height: 100px;
     background: #eaeaea;
