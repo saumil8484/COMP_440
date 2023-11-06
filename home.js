@@ -134,12 +134,12 @@ searchbtn.onclick = function(){
             // Handle the response data here
             Products_Json = data;
             console.log(data);
-            if(data.success == false)
+            if(Object.keys(data).length === 0)
             {
                 window.alert ("No items found for this category !");
                 return false;
             }
-            else if(data.success == true)
+            else
             {
                 list_table();
                 show_searched_category.style.display = 'block';
