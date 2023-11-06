@@ -65,7 +65,7 @@ class Review(db.Model):
     review_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     rating = db.Column(db.String(9), unique=False, nullable=False)
     description = db.Column(db.String(1000), unique=False, nullable=False)
-    item_id = db.Column(db.Integer, unique=True, nullable=False)
+    item_id = db.Column(db.Integer, unique=False, nullable=False)
     u_id = db.Column(db.Integer, unique=False, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 

@@ -122,7 +122,7 @@ searchbtn.onclick = function(){
 
     else{
         const formParams = new URLSearchParams();
-        formParams.append('search', search);
+        formParams.append('category', search);
         console.log(formParams);
 
         
@@ -279,12 +279,11 @@ submit_review_btn.onclick = function(){
 
     else{
         const formParams = new URLSearchParams();
-        formParams.append('user_ID', user_ID);
-        formParams.append('pid', pid);
-        formParams.append('review_dropdown', review_dropdown);
-        formParams.append('review_description', review_description);
+        formParams.append('u_id', user_ID);
+        formParams.append('item_id', pid);
+        formParams.append('rating', review_dropdown);
+        formParams.append('description', review_description);
         console.log(formParams);
-
         
         fetch('http://127.0.0.1:5000/review', {
             method: 'POST',
