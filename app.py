@@ -1,13 +1,15 @@
+from itertools import product
 from flask import Flask
 import flask as f
 import flask_sqlalchemy as fsa
 import re
 from flask_cors import CORS
 from collections import OrderedDict
+import json
 
 from datetime import datetime, time, timedelta
 
-app = f.Flask(__name__)
+app = Flask(__name__)
 CORS(app)
 app.secret_key = 'applebeepie' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -38,7 +40,7 @@ class User(db.Model):
     __tablename__ = 'users' 
     
     u_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     email=db.Column(db.String(80),unique=True, nullable=False)
     firstname=db.Column(db.String(80), nullable=False)
@@ -63,91 +65,58 @@ class Review(db.Model):
 
     review_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     rating = db.Column(db.String(9), unique=False, nullable=False)
-    description = db.Column(db.String(1000), unique=True, nullable=False)
+    description = db.Column(db.String(1000), unique=False, nullable=False)
     item_id = db.Column(db.Integer, unique=True, nullable=False)
-    u_id = db.Column(db.Integer, unique=True, nullable=False)
+    u_id = db.Column(db.Integer, unique=False, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 class ActionCounter(db.Model):
     __tablename__ = 'action_counter'
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     u_id = db.Column(db.Integer, unique=True, nullable=False)
     daily_item_count = db.Column(db.Integer, unique=False, nullable=False)
     first_item_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     review_count = db.Column(db.Integer, unique=False, nullable=False)
     first_review_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
+# =================================== Initialize Database ===================================================
 
 # ======================================== APIs =============================================================
 
 
 
-
-@app.route('/')
-def index():
-    return f.jsonify(message="Welcome to the Login and Registration System", success=True)
-
-@app.route('/register', methods=['POST'])
-def register():
-    if f.request.method == 'POST':
-        try:
-            username = f.request.form['username']
-            password = f.request.form['password']
-            email = f.request.form['email']
-            Fname = f.request.form['firstname']
-            Lname = f.request.form['lastname']
-
-            if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
-                return f.jsonify(error="Invalid Input")
-
-            new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
-            db.session.add(new_user)
-            db.session.commit()
-            return f.jsonify(message="Registration successful. You can now login.", success=True)
-        except Exception as e:
-            return f.jsonify(message="Registration unsuccessful. Reason: " + str(e), success=False)
-
-@app.route('/login', methods=['POST'])
-def login():
-    if f.request.method == 'POST':
-        username = f.request.form['username']
-        password = f.request.form['password']
-        print("username: " + username + " password: " + password)
-        print("is_sql_injection(username): " + str(is_sql_injection(username)) + " is_sql_injection(password): " + str(is_sql_injection(password)))
-        if is_sql_injection(username) and is_sql_injection(password):
-            return f.jsonify(error="Invalid Input", success=False)
-        else:
-            user = User.query.filter_by(username=username, password=password).first()
-            if user:
-                return f.jsonify(message="Login successful!", success=True)
-            else:
-                return f.jsonify(error="Invalid credentials. Please try again.", success=False)
-#-----------------------------------------------------API Post items---------------------------------------------
+# db.session.add(user)
+# db.session.commit()
 @app.route('/addItems',methods=['POST'])
 def addItems():
     if f.request.method== ['POST']:
+        u_id =f.request.form['u_id']
         title = f.request.form['title']
         description = f.request.form['description']
         Pcategory = f.request.form['primary_category']
         Scategory = f.request.form['sub_category1']
         Tcategory = f.request.form['sub_category2']
         price = f.request.form['price']  
-          
-        action_counter = ActionCounter.query.filter_by(u_id=User.get_current_user().u_id).first()
-        post_was_today= False
-        if action_counter:
-          # Get the current date and time
-          current_datetime = datetime.now()
-        
-          # Extract the current date (midnight) and the end of the day (23:59:59)
-          current_date = current_datetime.date()
-          start_of_day = datetime.combine(current_date, time.min)
-          end_of_day = datetime.combine(current_date, time.max)
+        print("LOL")
 
-          # check if post was today
-          post_was_today = start_of_day <= action_counter.first_item_time <= end_of_day
-          if action_counter.daily_item_count >= 3 and post_was_today:
-              return f.jsonify(message="You have reached the limit of item that can be posted in a day", success=False)
+
+
+        action_counter = ActionCounter.query.filter_by(u_id=u_id).first()
+        post_was_today= False
+        # if action_counter:
+        #   # Get the current date and time
+        #   current_datetime = datetime.now()
+        
+        #   # Extract the current date (midnight) and the end of the day (23:59:59)
+        #   current_date = current_datetime.date()
+        #   start_of_day = datetime.combine(current_date, time.min)
+        #   end_of_day = datetime.combine(current_date, time.max)
+
+        #   # check if post was today
+        #   post_was_today = start_of_day <= action_counter.first_item_time <= end_of_day
+        #   if action_counter.daily_item_count >= 3 and post_was_today:
+        #       return f.jsonify(message="You have reached the limit of item that can be posted in a day", success=False)
         
         # Save Post
         item=Item( 
@@ -157,7 +126,7 @@ def addItems():
                     sub_category1=Scategory,
                     sub_category2=Tcategory,
                     price=price,
-                    owner_id=User.get_current_user().u_id
+                    owner_id=u_id
                 )
         db.session.add(item) 
 
@@ -170,7 +139,7 @@ def addItems():
                 action_counter.first_item_time = datetime.now()
         else:
             # this is first time so create new action counter
-            new_action_counter = ActionCounter(u_id=User.get_current_user().u_id,
+            new_action_counter = ActionCounter(u_id=u_id,
                                            daily_item_count=1,
                                            first_item_time=datetime.now() - timedelta(hours=24),
                                            review_count=0,
@@ -187,7 +156,7 @@ def addItems():
 def initilize_Database():
     if f.request.method== ['POST']:
 #   ------------------------------------User Table-----------------------------------------------------------
-        try:
+       
             userinsert=[[1,"John","John123","John@gmail.com","John","Smith","2023-11-03 08:40:00"],
             [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson","2023-11-02 10:40:00"],
             [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams","2023-10-30 18:40:00"],
@@ -263,8 +232,131 @@ def initilize_Database():
             
             
             return f.jsonify(message="Database Initilization completed", success=True)
+        
+
+
+
+
+
+
+@app.route('/')
+def index():
+    return f.jsonify(message="Welcome to the Login and Registration System", success=True)
+
+@app.route('/register', methods=['POST'])
+def register():
+    if f.request.method == 'POST':
+        try:
+            username = f.request.form['username']
+            password = f.request.form['password']
+            email = f.request.form['email']
+            Fname = f.request.form['firstname']
+            Lname = f.request.form['lastname']
+
+            if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
+                return f.jsonify(error="Invalid Input")
+
+            new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
+            db.session.add(new_user)
+            db.session.commit()
+            return f.jsonify(message="Registration successful. You can now login.", success=True)
         except Exception as e:
-            return f.jsonify(message="Item Posting unsuccessful. Reason: " + str(e), success=False)
+            return f.jsonify(message="Registration unsuccessful. Reason: " + str(e), success=False)
+
+@app.route('/login', methods=['POST'])
+def login():
+    if f.request.method == 'POST':
+        username = f.request.form['username']
+        password = f.request.form['password']
+        print("username: " + username + " password: " + password)
+        print("is_sql_injection(username): " + str(is_sql_injection(username)) + " is_sql_injection(password): " + str(is_sql_injection(password)))
+        if is_sql_injection(username) and is_sql_injection(password):
+            return f.jsonify(error="Invalid Input", success=False)
+        else:
+            user = User.query.filter_by(username=username, password=password).first()
+            if user:
+                return f.jsonify(user_id=user.u_id, success=True)
+            else:
+                return f.jsonify(error="Invalid credentials. Please try again.", success=False)
+
+@app.route('/review', methods=['POST'])
+def post_review():
+    if f.request.method == 'POST':
+        u_id = f.request.form['u_id']
+        item_id = f.request.form['item_id']
+        rating = f.request.form['rating']
+        description = f.request.form['description']
+        print("Saving review: item_id: " + item_id + " rating: " + rating + " description: " + description)
+
+        # Check if limit is exceeded or already reviewed this product
+        review = Review.query.filter_by(item_id=item_id, u_id=u_id).first()
+        if review:
+            return f.jsonify(message="This User's review already exists for this product.", success=False)
+        
+        action_counter = ActionCounter.query.filter_by(u_id=u_id).first()
+        review_was_today = False
+        if action_counter:
+            # Get the current date and time
+            current_datetime = datetime.now()
+
+            # Extract the current date (midnight) and the end of the day (23:59:59)
+            current_date = current_datetime.date()
+            start_of_day = datetime.combine(current_date, time.min)
+            end_of_day = datetime.combine(current_date, time.max)
+
+            # check if review was today
+            review_was_today = start_of_day <= action_counter.first_review_time <= end_of_day
+            if action_counter.review_count >= 3 and review_was_today:
+                return f.jsonify(message="You can only post 3 reviews in 24 hrs.", success=False)
+
+        # Save review
+        new_review = Review(rating=rating, description=description, item_id=item_id, u_id=u_id)
+        db.session.add(new_review)
+
+        if action_counter:
+            if review_was_today:
+                action_counter.review_count = action_counter.review_count + 1
+            else:
+                # review older than day, so reset counter to 1 and current timestamp to today
+                action_counter.review_count = 1
+                action_counter.first_review_time = datetime.now()
+        else:
+            # this is first time so create new action counter
+            new_action_counter = ActionCounter(u_id=u_id,
+                                           daily_item_count=0,
+                                           first_item_time=datetime.now() - timedelta(hours=24),
+                                           review_count=1,
+                                           first_review_time=datetime.now()
+                                           )
+            db.session.add(new_action_counter)
+        db.session.commit()
+
+        # send confirmation
+        return f.jsonify(message="Review posted.", success=True)
+
+@app.route('/search', methods=['POST'])
+def search_category():
+    if f.request.method == 'POST':
+        category = f.request.form['category']
+
+        items = Item.query.filter_by(Pcategory=category).all()
+        serialized_items = [
+            OrderedDict([
+                ("item_id", item.item_id),
+                ("title", item.title),
+                ("description", item.description),
+                ("Pcategory", item.Pcategory),
+                ("Scategory", item.Scategory),
+                ("Tcategory", item.Tcategory),
+                ("price", item.price),
+            ])
+            for item in items
+        ]
+
+        # return f.jsonify(items=serialized_items)
+        response_data = json.dumps(serialized_items, indent=4, ensure_ascii=False, sort_keys=False)
+
+        return response_data
 
 if __name__ == '__main__':
     with app.app_context():
