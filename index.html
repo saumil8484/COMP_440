@@ -59,6 +59,7 @@
             let confirmPass =document.getElementById("confirmPass");
             let signupbtn =document.getElementById("signupbtn");
             let loginbtn =document.getElementById("loginbtn");
+            var user_ID;
 
             logintab.onclick = function(){
                 firstname.style.maxHeight ="0";
@@ -207,6 +208,8 @@
                         }
                         else if(data.success == true)
                         {
+                            user_ID = data.user_id;
+                            localStorage.setItem('user_ID', user_ID);
                             location.href="home.html";
                             return true;
                         }

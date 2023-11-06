@@ -5,6 +5,9 @@ let initialise_database_section = document.getElementById("initialise_database")
 var search_form = document.getElementById("search_form");
 var review_item = document.getElementById("review_item");
 
+const user_ID = localStorage.getItem('user_ID');
+console.log(user_ID);
+
 function homepage(){
     welcome_page.style.display= 'block';
     post_item_section.style.display = 'none';
@@ -68,6 +71,7 @@ submitbtn.onclick = function(){
     
     else{
         const formParams = new URLSearchParams();
+        formParams.append('user_ID', user_ID);
         formParams.append('title', title);
         formParams.append('description', description);
         formParams.append('primary_category', primary_category);
@@ -275,7 +279,7 @@ submit_review_btn.onclick = function(){
 
     else{
         const formParams = new URLSearchParams();
-        
+        formParams.append('user_ID', user_ID);
         formParams.append('pid', pid);
         formParams.append('review_dropdown', review_dropdown);
         formParams.append('review_description', review_description);
