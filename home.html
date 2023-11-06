@@ -68,26 +68,12 @@
                         </div>
                     </form><br><br>
                     <div id="show_searched_category" style="display:none">
-                    <table style="width: 95%;">
-                        <thead>
-                            <tr>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Primary Category</th>
-                            <th>Sub Category 1</th>
-                            <th>Sub Category 2</th>
-                            <th>Price ($)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="data_output">
-                            
-                        </tbody>
-                    </table>
+                        <table id="display_searched_data"></table>
                     </div>
                 </div>
 
                 <div id="review_item" style="display: none;">
-                    <h2>Give a review</h2>
+                    <h2 id="review_heading"></h2>
                     <form name="ReviewForm" method="post" id="review_item_form">
                         <div class="input-group">
                             <input class="input-field" placeholder="Select a review" list="review_dropdown" name="review_dropdown">

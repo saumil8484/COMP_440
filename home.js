@@ -2,6 +2,8 @@ let welcome_page = document.getElementById("welcome_page");
 let post_item_section = document.getElementById("post_item");
 let search_category_section = document.getElementById("search_category");
 let initialise_database_section = document.getElementById("initialise_database");
+var search_form = document.getElementById("search_form");
+var review_item = document.getElementById("review_item");
 
 function homepage(){
     welcome_page.style.display= 'block';
@@ -105,32 +107,6 @@ submitbtn.onclick = function(){
     }
 }
 
-
-function list_table(){
-    fetch("products.json")
-    .then(function(response){
-        return response.json();
-    })
-    .then(function(products){
-        let placeholder = document.querySelector("#data_output");
-        let out = "";
-        for(let product of products){
-            out += `
-                <tr>
-                <td>${product.title}</td>
-                <td>${product.description}</td>
-                <td>${product.primary_category}</td>
-                <td>${product.sub_category1}</td>
-                <td>${product.sub_category2}</td>
-                <td>${product.price}</td>
-                </tr>
-            `;
-        }
-
-        placeholder.innerHTML = out;
-    })
-}
-
 searchbtn.onclick = function(){
     var search = document.forms.searchForm.search.value;
     let show_searched_category = document.getElementById("show_searched_category");
@@ -144,11 +120,9 @@ searchbtn.onclick = function(){
         const formParams = new URLSearchParams();
         formParams.append('search', search);
         console.log(formParams);
-        list_table();
-        show_searched_category.style.display = 'block';
 
         //Change the URL for search 
-        /*fetch('http://127.0.0.1:5000/register', {
+        fetch('http://127.0.0.1:5000/register', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -158,6 +132,7 @@ searchbtn.onclick = function(){
         .then(response => response.json()) 
         .then(data => {
             // Handle the response data here
+            Products_Json = data;
             console.log(data);
             if(data.success == false)
             {
@@ -166,19 +141,114 @@ searchbtn.onclick = function(){
             }
             else if(data.success == true)
             {
-                //Enter code to display table
+                list_table();
                 show_searched_category.style.display = 'block';
                 return true;
             }
         })
         .catch(error => {
             console.error('Error:', error);
-        });*/
+        });
         return true;
     }
 }
 
+//sample Json Array
+var Sample_Products_Json = [
+    { "pid" : 1, 
+    "title" : "Smartphone",
+    "description" : "This is iPhone 15",
+    "primary_category" : "Electronics",
+    "sub_category1" : "CellPhone",
+    "sub_category2" : "Apple",
+    "price" : "1200"},
+                
+    { "pid" : 2, 
+    "title" : "Watch",
+    "description" : "This is Wrist watch",
+    "primary_category" : "Electronics",
+    "sub_category1" : "Watch",
+    "sub_category2" : "Digital",
+    "price" : "100"},
+    
+    { "pid" : 3, 
+    "title" : "headphones",
+    "description" : "This are ANC headphones",
+    "primary_category" : "Electronics",
+    "sub_category1" : "Headphones",
+    "sub_category2" : "",
+    "price" : "50"},
+    
+    { "pid" : 4, 
+    "title" : "bicycle",
+    "description" : "This is bicycle",
+    "primary_category" : "Sports",
+    "sub_category1" : "",
+    "sub_category2" : "",
+    "price" : "200"},
+    
+    { "pid" : 5, 
+    "title" : "Database Design Textbook",
+    "description" : "This is textbook",
+    "primary_category" : "Book",
+    "sub_category1" : "Computer Science",
+    "sub_category2" : "Database",
+    "price" : "60"}];
 
+var Products_Json = [];
+
+function list_table(){
+    var headers = Object.keys(Products_Json[0]);
+    
+    var headerRowHTML='<tr>';
+        headerRowHTML+='<th>'+'Product Id'+'</th>';
+        headerRowHTML+='<th>'+'Title'+'</th>';
+        headerRowHTML+='<th>'+'Description'+'</th>';
+        headerRowHTML+='<th>'+'Primary Category'+'</th>';
+        headerRowHTML+='<th>'+'Sub category 1'+'</th>';
+        headerRowHTML+='<th>'+'Sub category 2'+'</th>';
+        headerRowHTML+='<th>'+'Price ($)'+'</th>';
+        headerRowHTML+='<th>'+'Review'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<Products_Json.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+Products_Json[i][header]+'</td>';
+        }
+       allRecordsHTML+='<td>'+'<button type="button" onclick="review_product('+ i +')">Post review</button>'+'</td>';
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("display_searched_data");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+var pid_json;
+function review_product(number){
+    var headers1 = Object.keys(Products_Json[0]);
+    for(var i=0;i<Products_Json.length;i++){
+        if(i == number){
+            for(var j=0;j<headers1.length;j++){
+                if(j == 0){
+                    var header1=headers1[j];
+                    pid_json = Products_Json[i][header1];    
+                }
+            }
+            
+        }
+    }
+    
+    var heading = "Give a review for product ID : "+pid_json;
+    document.getElementById("review_heading").innerHTML = heading;
+    review_item.style.display= 'block';
+    search_form.style.display = 'none';
+}
 
 backbtn.onclick = function(){
     let search_form = document.getElementById("search_form");
@@ -188,11 +258,10 @@ backbtn.onclick = function(){
 }
 
 submit_review_btn.onclick = function(){
-    var pid = document.forms.RegForm.title.value;// Change it to Product ID
+    var pid = pid_json;
     var review_dropdown = document.forms.ReviewForm.description.value;
     var review_description = document.forms.ReviewForm.review_description.value;
-    var search_form = document.getElementById("search_form");
-    var review_item = document.getElementById("review_item");
+    
 
     if (review_dropdown == "") {
         window.alert("Please select a review from dropdown !");
