@@ -80,8 +80,8 @@ submitbtn.onclick = function(){
         formParams.append('price', price);
         console.log(formParams);
 
-        //Change the URL
-        fetch('http://127.0.0.1:5000/register', {
+        
+        fetch('http://127.0.0.1:5000/addItems', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -125,8 +125,8 @@ searchbtn.onclick = function(){
         formParams.append('search', search);
         console.log(formParams);
 
-        //Change the URL for search 
-        fetch('http://127.0.0.1:5000/register', {
+        
+        fetch('http://127.0.0.1:5000/search', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -263,7 +263,7 @@ backbtn.onclick = function(){
 
 submit_review_btn.onclick = function(){
     var pid = pid_json;
-    var review_dropdown = document.forms.ReviewForm.description.value;
+    var review_dropdown = document.forms.ReviewForm.review_dropdown.value;
     var review_description = document.forms.ReviewForm.review_description.value;
     
 
@@ -285,8 +285,8 @@ submit_review_btn.onclick = function(){
         formParams.append('review_description', review_description);
         console.log(formParams);
 
-        //Change the URL
-        fetch('http://127.0.0.1:5000/register', {
+        
+        fetch('http://127.0.0.1:5000/review', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -321,8 +321,8 @@ initialise_databasebtn.onclick = function(){
     const formParams = new URLSearchParams();
         console.log(formParams);
 
-        //Change the URL
-        fetch('http://127.0.0.1:5000/register', {
+        
+        fetch('http://127.0.0.1:5000/initDatabase', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
