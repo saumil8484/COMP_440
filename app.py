@@ -282,14 +282,15 @@ def initilize_Database():
                         [2,"Shirts","top Shirts","Cloths","Shirt","Cotton",5,1,"2023-11-11 17:40:00"],
                         ]
             i=0
+
             for i in range(0,len(itemsInsert)):
                 date_created = datetime.strptime(itemsInsert[i][8], '%Y-%m-%d %H:%M:%S')
                 newItem = Item(item_id=itemsInsert[i][0],
                             title=itemsInsert[i][1],
                             description=itemsInsert[i][2],
-                            Pcategory=itemsInsert[i][3],
-                            Scategory=itemsInsert[i][4],
-                            Tcategory=itemsInsert[i][5],
+                            primary_category=itemsInsert[i][3],
+                            sub_category1=itemsInsert[i][4],
+                            sub_category2=itemsInsert[i][5],
                             price=itemsInsert[i][6],
                             u_id=itemsInsert[i][7],
                             date_created=date_created)
@@ -363,15 +364,15 @@ def search_category():
     if f.request.method == 'POST':
         category = f.request.form['category']
 
-        items = Item.query.filter_by(Pcategory=category).all()
+        items = Item.query.filter_by(primary_category=category).all()
         serialized_items = [
             OrderedDict([
                 ("item_id", item.item_id),
                 ("title", item.title),
                 ("description", item.description),
-                ("Pcategory", item.Pcategory),
-                ("Scategory", item.Scategory),
-                ("Tcategory", item.Tcategory),
+                ("Pcategory", item.primary_category),
+                ("Scategory", item.sub_category1),
+                ("Tcategory", item.sub_category2),
                 ("price", item.price),
             ])
             for item in items
