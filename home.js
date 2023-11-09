@@ -78,7 +78,7 @@ submitbtn.onclick = function(){
         formParams.append('sub_category1', sub_category1);
         formParams.append('sub_category2', sub_category2);
         formParams.append('price', price);
-        console.log(formParams);
+        console.log("MY Bad");
 
         
         fetch('http://127.0.0.1:5000/addItems', {
@@ -140,6 +140,7 @@ searchbtn.onclick = function(){
             console.log(data);
             if(Object.keys(data).length === 0)
             {
+                console.log("No LOL");
                 window.alert ("No items found for this category !");
                 return false;
             }
@@ -319,7 +320,7 @@ submit_review_btn.onclick = function(){
 initialise_databasebtn.onclick = function(){
     const formParams = new URLSearchParams();
         console.log(formParams);
-
+        console.log("MY Bad");
         
         fetch('http://127.0.0.1:5000/initDatabase', {
             method: 'POST',
@@ -331,6 +332,7 @@ initialise_databasebtn.onclick = function(){
         .then(response => response.json()) 
         .then(data => {
             // Handle the response data here
+            console.log("MY Goodf");
             console.log(data);
             if(data.success == false)
             {
