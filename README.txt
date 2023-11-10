@@ -7,7 +7,7 @@ python app.py
 Then use the UI by opening index.html.
 
 
-Phase 1
+Phase 1 (Demo Video - https://youtu.be/UFlsXXOkito)
 Omkar Lubal 
 - Created SQLite User Model
 - Building login API and testing using Postman
@@ -22,7 +22,7 @@ Nevil Shingala
 - Video Creation and presentation
 
 
-Phase 2
+Phase 2 (Demo Video - https://youtu.be/WhzyuywOCdQ)
 Omkar Lubal
 - Created DB models with required contraints
 - Created Review and Search API
