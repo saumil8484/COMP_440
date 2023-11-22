@@ -13,6 +13,7 @@
             <a href="#post" onclick="post_item()">Post an item</a>
             <a href="#search" onclick="search_category()">Search a category</a>
             <a href="#intialise" onclick="initialise_database()">Initialise Database</a>
+            <a href="#list" onclick="lists()">Lists</a>
             <a onclick="logout()" style="position: fixed; bottom: 0;">Logout</a>
         </div>
 
@@ -98,6 +99,34 @@
             <div id="initialise_database" style="display: none;">
                 <div class="btn-field">
                     <button type="button" id="initialise_databasebtn"><h3>Initialise Database</h3></button>
+                </div>
+            </div>
+
+            <div id="lists" style="display: none;">
+                <div id="lists_buttons">
+                    <div class="btn-field">
+                        <button type="button" id="list_1"><h3>List of most expensive items in each category</h3></button>
+                        <button type="button" id="list_2"><h3>List of users who posted at least two items in different category on the same day</h3></button>
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="button" id="list_3"><h3>List of items posted by specific user, having "Excellent" or "Good" comment</h3></button>
+                        <button type="button" id="list_4"><h3>List of users who posted most number of items on <!--Enter date here--> </h3></button>
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="button" id="list_5"><h3>List of users favorited by both of two specific users</h3></button>
+                        <button type="button" id="list_6"><h3>List of users who never have posted "Excellent" items</h3></button>
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="button" id="list_7"><h3>List of users who never posted a "Poor" review</h3></button>
+                        <button type="button" id="list_8"><h3>List of users who have posted "Poor" review only</h3></button>
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="button" id="list_9"><h3>List of users whose every item never got a "Poor" review</h3></button>
+                        <button type="button" id="list_10"><h3>List a user pair that they give each other "Excellent" review for every item posted by them</h3></button>
+                    </div><br>
+                </div>
+                <div id="lists_functionalities">
+                    <p>Functionalities</p>
                 </div>
             </div>
         </div>

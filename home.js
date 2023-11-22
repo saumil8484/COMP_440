@@ -2,6 +2,9 @@ let welcome_page = document.getElementById("welcome_page");
 let post_item_section = document.getElementById("post_item");
 let search_category_section = document.getElementById("search_category");
 let initialise_database_section = document.getElementById("initialise_database");
+let lists_section = document.getElementById("lists");
+let lists_buttons_section = document.getElementById("lists_buttons");
+let lists_functionalities_section = document.getElementById("lists_functionalities");
 var search_form = document.getElementById("search_form");
 var review_item = document.getElementById("review_item");
 
@@ -13,6 +16,7 @@ function homepage(){
     post_item_section.style.display = 'none';
     search_category_section.style.display= 'none';
     initialise_database_section.style.display= 'none';
+    lists_section.style.display= 'none';
 }
 
 function post_item(){
@@ -20,6 +24,7 @@ function post_item(){
     post_item_section.style.display = 'block';
     search_category_section.style.display= 'none';
     initialise_database_section.style.display= 'none';
+    lists_section.style.display= 'none';
 }
 
 function search_category(){
@@ -27,6 +32,7 @@ function search_category(){
     post_item_section.style.display = 'none';
     search_category_section.style.display= 'block';
     initialise_database_section.style.display= 'none';
+    lists_section.style.display= 'none';
 }
 
 function initialise_database(){
@@ -34,6 +40,17 @@ function initialise_database(){
     post_item_section.style.display = 'none';
     search_category_section.style.display= 'none';
     initialise_database_section.style.display= 'block';
+    lists_section.style.display= 'none';
+}
+
+function lists(){
+    welcome_page.style.display= 'none';
+    post_item_section.style.display = 'none';
+    search_category_section.style.display= 'none';
+    initialise_database_section.style.display= 'none';
+    lists_section.style.display= 'block';
+    lists_buttons_section.style.display= 'block';
+    lists_functionalities_section.style.display= 'none';
 }
 
 function logout(){ 
