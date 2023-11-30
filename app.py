@@ -2,10 +2,13 @@
 from flask import Flask
 import flask as f
 import flask_sqlalchemy as fsa
+from sqlalchemy.sql import func
 import re
 from flask_cors import CORS
 from collections import OrderedDict
 import json
+from sqlalchemy import and_
+from sqlalchemy.sql import select
 
 from datetime import datetime, time, timedelta
 
@@ -178,8 +181,6 @@ def post_review():
         # send confirmation
         return f.jsonify(message="Review posted.", success=True)
 
-# db.session.add(user)
-# db.session.commit()
 @app.route('/addItems',methods=['POST'])
 def addItems():
     if f.request.method== 'POST':
@@ -251,11 +252,11 @@ def initilize_Database():
     if f.request.method== 'POST':
 #   ------------------------------------User Table-----------------------------------------------------------
        
-            userinsert=[[11,"qJohn","qJohn123","qJohn@gmail.com","wJohn","wSmith","2023-12-03 08:40:00"],
-                        [12,"Mary","Mary1","Mary@gmail.com","Mary","Johnson","2023-11-02 10:40:00"],
-                        [13,"Alex","Alex2","Alex@gmail.com","Alex","Williams","2023-10-30 18:40:00"],
-                        [14,"David","David3","David@gmail.com","David","Brown","2023-10-31 11:40:00"],
-                        [16,"wEmily","wEmily112","wEmily@gmail.com","qEmily","qDavis","2023-12-01 15:40:00"],
+            userinsert=[[1,"qJohn","qJohn123","qJohn@gmail.com","John","Smith","2023-12-03 08:40:00"],
+                        [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson","2023-11-02 10:40:00"],
+                        [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams","2023-10-30 18:40:00"],
+                        [4,"David","David3","David@gmail.com","David","Brown","2023-10-31 11:40:00"],
+                        [5,"wEmily","wEmily112","wEmily@gmail.com","Emily","Davis","2023-12-01 15:40:00"],
             ]
 
             for i in range(0,len(userinsert)):
@@ -279,7 +280,10 @@ def initilize_Database():
                         [5,"Shoe","New Designs for Air force ","Shoes","Nike","Air Force",80,3,"2023-10-30 18:40:00"],
                         [6,"Furniture","Stylish Modern table Designed by professional","Furniture","Tables","Wooden",200,4,"2023-10-31 13:40:00"],
                         [7,"Games","Latest games for PC, Xbox and PS5","Games","FPS","RPG",50,5,"2023-11-01 17:40:00"],
-                        [2,"Shirts","top Shirts","Cloths","Shirt","Cotton",5,1,"2023-11-11 17:40:00"],
+                        [2,"Shirts","top Shirts","Cloths","Shirt","Cotton",5,1,"2023-11-12 17:40:00"],
+                        [8,"AF 07","triple white","Shoes","Nike","Air Force",5,1,"2023-11-12 17:40:00"],
+                        [9,"RL Shirts","top Shirts","Cloths","Shirt","Cotton",5,2,"2023-11-12 17:40:00"],
+                        [10,"AF 08","triple black","Shoes","Nike","Air Force",5,2,"2023-11-12 17:40:00"],
                         ]
             i=0
 
@@ -351,13 +355,6 @@ def initilize_Database():
             
             print("Complete")
             return f.jsonify(message="Database Initilization completed", success=True)
-        
-
-
-
-
-
-
 
 @app.route('/search', methods=['POST'])
 def search_category():
@@ -382,6 +379,117 @@ def search_category():
         response_data = json.dumps(serialized_items, indent=4, ensure_ascii=False, sort_keys=False)
 
         return response_data
+
+# Custom encoder function for datetime objects
+def datetime_serializer(obj):
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    return None
+
+@app.route('/twoCategories', methods=['GET'])
+def two_categories():
+    if f.request.method == 'GET':
+        category1 = f.request.form['category1']
+        category2 = f.request.form['category2']
+        items = (
+            Item.query
+            .filter((Item.primary_category == category1) | (Item.primary_category == category2))
+            .order_by(func.strftime('%Y-%m-%d', Item.date_created))
+            .all()
+        )
+
+        user_set = set()
+        for item in items:
+            user_set.add(item.u_id)
+
+        # Check if both categories exist for an user
+        for user in user_set.copy():
+            cat1_present = False
+            cat2_present = False
+            for item in items:
+                if item.u_id == user:
+                    if item.primary_category == category1:
+                        cat1_present = True
+                    if item.primary_category == category2:
+                        cat2_present = True
+            if not (cat1_present and cat2_present):
+                user_set.remove(user)
+        print(user_set)
+
+        # serialized_items = [
+        #     OrderedDict([
+        #         ("item_id", item.item_id),
+        #         ("title", item.title),
+        #         ("description", item.description),
+        #         ("Pcategory", item.primary_category),
+        #         ("Scategory", item.sub_category1),
+        #         ("Tcategory", item.sub_category2),
+        #         ("price", item.price),
+        #         ("date", item.date_created),
+        #         ("user", item.u_id)
+        #     ])
+        #     for item in items
+        # ]
+
+        filtered_users = User.query.filter(User.u_id.in_(user_set)).all()
+        filtered_users = [
+            OrderedDict([
+                ("u_id", user.u_id),
+                ("firstname", user.firstname),
+                ("lastname", user.lastname),
+            ])
+            for user in filtered_users
+        ]
+        response_data = json.dumps(filtered_users, indent=4, ensure_ascii=False, default=datetime_serializer)
+        # response_data = json.dumps(serialized_items, indent=4, ensure_ascii=False, sort_keys=False, default=datetime_serializer)
+
+        return response_data
+
+# API route to list users who posted the most number of items on a specific date
+@app.route('/users_most_items_on_date', methods=['GET'])
+def users_most_items_on_date():
+    # Get the specific date from the request parameters (you can also hardcode it)
+    date_str = "2023-11-12 17:40:00"
+    specific_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+
+    # Query to get users who posted the most number of items on the specific date
+    result = db.session.query(
+        User.firstname,
+        func.count(Item.item_id).label('item_count')
+    ).join(Item, User.u_id == Item.u_id).filter(
+        Item.date_created >= specific_date,
+        Item.date_created < specific_date + timedelta(days=1)
+    ).group_by(User).order_by(func.count(Item.item_id).desc()).all()
+
+    # Check if there is a tie
+    # print(f.jsonify((result[0])))
+    max_item_count = result[0].item_count
+    top_users = [(user.firstname) for user in result if user.item_count == max_item_count]
+
+    return f.jsonify({"top_users": top_users, "item_count": max_item_count, "success": True})
+
+@app.route('/users_items_without_poor_reviews', methods=['GET'])
+def users_items_without_poor_reviews():
+    # Fetch all reviews
+    all_reviews = Review.query.all()
+
+    # Get item IDs with "poor" reviews
+    id_no_poor_reviews = {review.u_id for review in all_reviews if review.rating.lower() != 'poor'}
+
+    # Filter items without "poor" reviews
+    users = User.query.all()
+
+    # Get users corresponding to items without "poor" reviews
+    users_items_without_poor_reviews = []
+        
+    for user in users:
+        for user_id in id_no_poor_reviews:
+            if user.u_id == user_id:
+                users_items_without_poor_reviews.append(user.firstname)
+    
+
+    users_items_without_poor_reviews = list(set(users_items_without_poor_reviews))
+    return f.jsonify({"users": users_items_without_poor_reviews, "success": True})
 
 if __name__ == '__main__':
     with app.app_context():
