@@ -48,6 +48,7 @@ class User(db.Model):
     email=db.Column(db.String(80),unique=True, nullable=False)
     firstname=db.Column(db.String(80), nullable=False)
     lastname= db.Column(db.String(80),nullable=False)
+    favorite_user = db.Column(db.Integer)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 class Item(db.Model):
@@ -252,15 +253,15 @@ def initilize_Database():
     if f.request.method== 'POST':
 #   ------------------------------------User Table-----------------------------------------------------------
        
-            userinsert=[[1,"qJohn","qJohn123","qJohn@gmail.com","John","Smith","2023-12-03 08:40:00"],
-                        [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson","2023-11-02 10:40:00"],
-                        [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams","2023-10-30 18:40:00"],
-                        [4,"David","David3","David@gmail.com","David","Brown","2023-10-31 11:40:00"],
-                        [5,"wEmily","wEmily112","wEmily@gmail.com","Emily","Davis","2023-12-01 15:40:00"],
+            userinsert=[[1,"qJohn","qJohn123","qJohn@gmail.com","John","Smith", 3,"2023-12-03 08:40:00"],
+                        [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson",  3,"2023-11-02 10:40:00"],
+                        [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams", 4,"2023-10-30 18:40:00"],
+                        [4,"David","David3","David@gmail.com","David","Brown", 1,"2023-10-31 11:40:00"],
+                        [5,"wEmily","wEmily112","wEmily@gmail.com","Emily","Davis", 4,"2023-12-01 15:40:00"],
             ]
 
             for i in range(0,len(userinsert)):
-                date_created =datetime.strptime(userinsert[i][6], '%Y-%m-%d %H:%M:%S')
+                date_created =datetime.strptime(userinsert[i][7], '%Y-%m-%d %H:%M:%S')
                 print(date_created)
                 newUser = User(u_id=userinsert[i][0],
                                username=userinsert[i][1],
@@ -268,6 +269,7 @@ def initilize_Database():
                                email=userinsert[i][3],
                                firstname=userinsert[i][4],
                                lastname=userinsert[i][5],
+                               favorite_user=userinsert[i][6],
                                date_created=date_created)
                 db.session.add(newUser)
                 db.session.commit()
@@ -416,21 +418,6 @@ def two_categories():
                 user_set.remove(user)
         print(user_set)
 
-        # serialized_items = [
-        #     OrderedDict([
-        #         ("item_id", item.item_id),
-        #         ("title", item.title),
-        #         ("description", item.description),
-        #         ("Pcategory", item.primary_category),
-        #         ("Scategory", item.sub_category1),
-        #         ("Tcategory", item.sub_category2),
-        #         ("price", item.price),
-        #         ("date", item.date_created),
-        #         ("user", item.u_id)
-        #     ])
-        #     for item in items
-        # ]
-
         filtered_users = User.query.filter(User.u_id.in_(user_set)).all()
         filtered_users = [
             OrderedDict([
@@ -468,7 +455,26 @@ def users_most_items_on_date():
 
     return f.jsonify({"top_users": top_users, "item_count": max_item_count, "success": True})
 
-@app.route('/users_items_without_poor_reviews', methods=['GET'])
+@app.route('/favorite', methods=['GET'])
+def get_favorite_by_two_users():
+    if f.request.method == 'GET':
+        userX = f.request.form['userX']
+        userY = f.request.form['userY']
+
+        user_set = set()
+        user_set.add(userX)
+        user_set.add(userY)
+
+        filtered_users = User.query.filter(User.username.in_(user_set)).all()
+
+        if filtered_users[0].favorite_user == filtered_users[1].favorite_user:
+            user = User.query.filter_by(u_id=filtered_users[0].favorite_user).first()
+            return f.jsonify({"users": user.firstname, "success": True})
+        
+        return f.jsonify({"success": False})
+    
+
+@app.route('/users_without_poor_reviews', methods=['GET'])
 def users_items_without_poor_reviews():
     # Fetch all reviews
     all_reviews = Review.query.all()
@@ -480,16 +486,15 @@ def users_items_without_poor_reviews():
     users = User.query.all()
 
     # Get users corresponding to items without "poor" reviews
-    users_items_without_poor_reviews = []
+    users_without_poor_reviews = []
         
     for user in users:
         for user_id in id_no_poor_reviews:
             if user.u_id == user_id:
-                users_items_without_poor_reviews.append(user.firstname)
-    
+                users_without_poor_reviews.append(user.firstname)
 
-    users_items_without_poor_reviews = list(set(users_items_without_poor_reviews))
-    return f.jsonify({"users": users_items_without_poor_reviews, "success": True})
+    users_without_poor_reviews = list(set(users_without_poor_reviews))
+    return f.jsonify({"users": users_without_poor_reviews, "success": True})
 
 if __name__ == '__main__':
     with app.app_context():
