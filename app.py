@@ -388,9 +388,9 @@ def datetime_serializer(obj):
         return obj.isoformat()
     return None
 
-@app.route('/twoCategories', methods=['GET'])
+@app.route('/twoCategories', methods=['POST'])
 def two_categories():
-    if f.request.method == 'GET':
+    if f.request.method == 'POST':
         category1 = f.request.form['category1']
         category2 = f.request.form['category2']
         items = (
@@ -433,7 +433,7 @@ def two_categories():
         return response_data
 
 # API route to list users who posted the most number of items on a specific date
-@app.route('/users_most_items_on_date', methods=['GET'])
+@app.route('/users_most_items_on_date', methods=['POST'])
 def users_most_items_on_date():
     # Get the specific date from the request parameters (you can also hardcode it)
     date_str = "2023-11-12 17:40:00"
@@ -455,9 +455,9 @@ def users_most_items_on_date():
 
     return f.jsonify({"top_users": top_users, "item_count": max_item_count, "success": True})
 
-@app.route('/favorite', methods=['GET'])
+@app.route('/favorite', methods=['POST'])
 def get_favorite_by_two_users():
-    if f.request.method == 'GET':
+    if f.request.method == 'POST':
         userX = f.request.form['userX']
         userY = f.request.form['userY']
 
@@ -474,7 +474,7 @@ def get_favorite_by_two_users():
         return f.jsonify({"success": False})
     
 
-@app.route('/users_without_poor_reviews', methods=['GET'])
+@app.route('/users_without_poor_reviews', methods=['POST'])
 def users_items_without_poor_reviews():
     # Fetch all reviews
     all_reviews = Review.query.all()
