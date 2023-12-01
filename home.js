@@ -877,7 +877,7 @@ list_5.onclick = function(){
     user_list();
     let select1 = document.getElementById("list_5_dropdown1");
     let select2 = document.getElementById("list_5_dropdown2");
-    let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
+    //let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
 
     for (let i = 0; i < user_list_data.length; i++) {
         let optn = user_list_data[i];
