@@ -573,7 +573,59 @@ def get_favorite_by_two_users():
             return f.jsonify({"u_id":user.u_id, "firstname": user.firstname, "lastname": user.lastname})
         
         return f.jsonify({})
-    
+# Phase 3 - 6
+@ app.route('/never_post_excellent', methods=['POST'])
+def never_post_excellent():
+    # Fetch all reviews
+    all_reviews = Review.query.all()
+    # Get item IDs with "Excellent" reviews
+    users = User.query.all()
+
+    items = Item.query.all()
+    id_no_excellent_reviews = {review.item_id for review in all_reviews if review.rating.lower() =='excellent'}
+    # get count of Excellent
+    no_excellent= dict()
+    user_name=[]
+    user_Lname=[]
+    count=0
+    for item in id_no_excellent_reviews:
+        count=0
+        for review in all_reviews:
+            if review.item_id == item and  review.rating.lower() =='excellent':
+                count=count+1
+        no_excellent[item]=count    
+
+    print(no_excellent)
+    itemList=[]
+    key_list=list(no_excellent.keys())        
+    print(key_list)
+    i=0                    
+    for i in key_list:
+        if(no_excellent[i]>=3):
+            itemList.append(i)            
+    print(itemList)
+    user_list=[]
+    j=0
+    A=[]
+    for item in items:
+        for j in range(0,len(itemList)):
+            if item.item_id==itemList[j]:
+                A.append(item.u_id)
+    print(A)
+    excellent=[]
+    for user in users:
+        for i in range(0,len(A)):
+            if user.u_id!=A[i]:
+                # user_name.append(user.firstname)
+                # user_Lname.append(user.lastname)
+                excellent.append({"firstname": user.firstname, "lastname": user.lastname})
+
+
+    return f.jsonify(excellent)
+
+
+
+
 # Phase 3 - 7
 @app.route('/users_without_poor_reviews', methods=['POST'])
 def users_items_without_poor_reviews():
@@ -618,6 +670,86 @@ def users_with_poor_reviews():
     ]
 
     return f.jsonify(users_details)
+# Phase 3-9
+@app.route('/never_posted_poor_review', methods=['POST'])
+def never_posted_poor_review():
+    # if f.request.method == 'POST':
+            
+        # Fetch all reviews
+        all_reviews = Review.query.all()
+        # Get item IDs with "poor" reviews
+        id_no_poor_reviews = {review.item_id for review in all_reviews if review.rating.lower() != 'poor'}
+        # Filter items without "poor" reviews
+        users = User.query.all()
+        id_no_excellent_reviews = {review.item_id for review in all_reviews if review.rating.lower() =='excellent'}
+        print(id)
+        # Fetch all items
+        all_items = Item.query.all()
+        u_no=[]
+        user_name=[]
+        user_Lname=[]
+        Item_and_User = dict()
+        # Adding item id as key and U_id as value
+        for i in all_items:
+            Item_and_User[i.item_id]= i.u_id
+        # creating a list that contains U_ID that has posted items and has no poor review    
+        for key in Item_and_User:
+            for item_id in id_no_poor_reviews:
+                if key == item_id:
+                    u_no.append(Item_and_User[item_id])
+        never_posted_poor_review=[]
+        # Creating a list that contains firstname of user from U_No
+        for user in users:
+            for i in u_no:
+                if(user.u_id==i):
+                     never_posted_poor_review.append({"u_id": user.u_id, "firstname": user.firstname, "lastname": user.lastname})
+
+        
+        user_name=list(set(user_name))
+        user_Lname= list(set(user_Lname))
+        #
+        return f.jsonify(never_posted_poor_review)
+
+# Phase 3- 10
+from sqlalchemy import and_
+
+# ...
+
+# Add this route to list user pairs who always gave each other "excellent" reviews
+@app.route('/excellent_review_user_pairs', methods=['POST'])
+def excellent_review_user_pairs():
+    # Fetch all users
+    all_users = User.query.all()
+
+    # Create a list to store user pairs with excellent reviews
+    excellent_review_pairs = []
+
+    # Iterate through all user pairs
+    for user1 in all_users:
+        for user2 in all_users:
+            if user1 != user2:  # Ensure users are different
+                # Check if they always gave each other "excellent" reviews
+                excellent_reviews_user1_to_user2 = Review.query.filter(
+                    and_(Review.u_id == user1.u_id, Review.rating == 'Excellent', Review.item_id == Item.u_id, Item.u_id == user2.u_id)
+                ).all()
+
+                excellent_reviews_user2_to_user1 = Review.query.filter(
+                    and_(Review.u_id == user2.u_id, Review.rating == 'Excellent', Review.item_id == Item.u_id, Item.u_id == user1.u_id)
+                ).all()
+
+                # If all reviews are "excellent," add the user pair to the list
+                if len(excellent_reviews_user1_to_user2) == len(excellent_reviews_user2_to_user1):
+                    excellent_review_pairs.append({
+                        
+                        "user1": user1.firstname,
+                        "user2": user2.firstname
+                    })
+
+    return f.jsonify(excellent_review_pairs)
+
+
+
+
 
 if __name__ == '__main__':
     with app.app_context():

@@ -978,7 +978,7 @@ list_6.onclick = function(){
     const formParams = new URLSearchParams();
     console.log(formParams);
     
-    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+    fetch('http://127.0.0.1:5000/never_post_excellent', {   //Change the URL
         method: 'POST',
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -1048,7 +1048,7 @@ function list_6_table(){
     var headers = Object.keys(list_6_data[0]);
     
     var headerRowHTML='<tr>';
-    headerRowHTML+='<th>'+'User ID'+'</th>';
+
     headerRowHTML+='<th>'+'First Name'+'</th>';
     headerRowHTML+='<th>'+'Last Name'+'</th>';
     headerRowHTML+='</tr>';       
@@ -1270,7 +1270,7 @@ list_9.onclick = function(){
     const formParams = new URLSearchParams();
     console.log(formParams);
     
-    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+    fetch('http://127.0.0.1:5000/never_posted_poor_review', {   //Change the URL
         method: 'POST',
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -1368,7 +1368,7 @@ list_10.onclick = function(){
     const formParams = new URLSearchParams();
     console.log(formParams);
     
-    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+    fetch('http://127.0.0.1:5000/excellent_review_user_pairs', {   //Change the URL
         method: 'POST',
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
