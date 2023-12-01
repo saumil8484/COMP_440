@@ -155,7 +155,16 @@
                     </div>
                     <div id="list_3_functionalities" style="display:none">
                         <h2>List of items posted by specific user, having "Excellent" or "Good" comment: </h2>
-                        <table id="list_3_table"></table><br><br><br>
+                        <select id="list_3_dropdown">
+                            <option>--Users--</option>
+                        </select><br><br>
+                        <div class="btn-field">
+                            <button type="button" id="list_3_searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                        <br><br>
+                        <div id="list_3_searched_user" style="display:none">
+                            <table id="list_3_table"></table><br><br><br>
+                        </div>
                         <div class="btn-field">
                             <button type="button" onclick="backbtn_list()">Back</button>
                         </div>
@@ -169,7 +178,19 @@
                     </div>
                     <div id="list_5_functionalities" style="display:none">
                         <h2>List of users favorited by both of two specific users: </h2>
-                        <table id="list_5_table"></table><br><br><br>
+                        <select id="list_5_dropdown1">
+                            <option>--User 1--</option>
+                        </select><br><br>
+                        <select id="list_5_dropdown2">
+                            <option>--User 2--</option>
+                        </select><br><br>
+                        <div class="btn-field">
+                            <button type="button" id="list_5_searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                        <br><br>
+                        <div id="list_5_searched_user" style="display:none">
+                            <table id="list_5_table"></table><br><br><br>
+                        </div>
                         <div class="btn-field">
                             <button type="button" onclick="backbtn_list()">Back</button>
                         </div>

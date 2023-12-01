@@ -645,9 +645,129 @@ list_3.onclick = function(){
     list_8_functionalities_section.style.display= 'none';
     list_9_functionalities_section.style.display= 'none';
     list_10_functionalities_section.style.display= 'none';
+
+
+
+    user_list();
+    let select = document.getElementById("list_3_dropdown");
+    //let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
+
+    for (let i = 0; i < user_list_data.length; i++) {
+        let optn = user_list_data[i];
+        let el = document.createElement("option");
+        el.textContent = optn;
+        el.value = optn;
+        select.appendChild(el);
+    }
 }
 
+list_3_searchbtn.onclick = function(){
+    var list_3_dropdown = document.getElementById('list_3_dropdown').value;
+    let list_3_searched_user = document.getElementById("list_3_searched_user");
 
+    if (list_3_dropdown == "--Users--" || list_3_dropdown == "") {
+        window.alert("Please select a user !");
+        return false;
+    }
+
+    else{
+        const formParams = new URLSearchParams();
+        formParams.append('user', list_3_dropdown);
+        console.log(formParams.toString());
+
+        
+        fetch('http://127.0.0.1:5000/search', { //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            list_3_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No data found !");
+                return false;
+            }
+            else
+            {
+                list_3_table();
+                list_3_searched_user.style.display = 'block';
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+    }
+}
+
+var list_3_data = [];
+
+function list_3_table(){
+    var headers = Object.keys(list_3_data[0]);
+    
+    var headerRowHTML='<tr>';
+        headerRowHTML+='<th>'+'Product ID'+'</th>';
+        headerRowHTML+='<th>'+'Title'+'</th>';
+        headerRowHTML+='<th>'+'Description'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_3_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_3_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_3_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+var user_list_data =[];
+function user_list(){
+    const formParams = new URLSearchParams();
+        console.log(formParams);
+        
+        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            user_list_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No data found !");
+                return false;
+
+            }
+            else
+            {
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+}
 
 list_4.onclick = function(){
     
@@ -753,6 +873,108 @@ list_5.onclick = function(){
     list_8_functionalities_section.style.display= 'none';
     list_9_functionalities_section.style.display= 'none';
     list_10_functionalities_section.style.display= 'none';
+
+    user_list();
+    let select1 = document.getElementById("list_5_dropdown1");
+    let select2 = document.getElementById("list_5_dropdown2");
+    let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
+
+    for (let i = 0; i < user_list_data.length; i++) {
+        let optn = user_list_data[i];
+        let el = document.createElement("option");
+        el.textContent = optn;
+        el.value = optn;
+        select1.appendChild(el);
+    }
+
+    for (let i = 0; i < user_list_data.length; i++) {
+        let optn = user_list_data[i];
+        let el = document.createElement("option");
+        el.textContent = optn;
+        el.value = optn;
+        select2.appendChild(el);
+    }
+}
+
+list_5_searchbtn.onclick = function(){
+    var list_5_dropdown1 = document.getElementById('list_5_dropdown1').value;
+    var list_5_dropdown2 = document.getElementById('list_5_dropdown2').value;
+    let list_5_searched_user = document.getElementById("list_5_searched_user");
+
+    if (list_5_dropdown1 == "--User 1--" || list_5_dropdown1 == "") {
+        window.alert("Please select a user 1 !");
+        return false;
+    }
+
+    else if (list_5_dropdown2 == "--User 2--" || list_5_dropdown2 == "") {
+        window.alert("Please select a user 2 !");
+        return false;
+    }
+
+    else{
+        const formParams = new URLSearchParams();
+        formParams.append('user1', list_5_dropdown1);
+        formParams.append('user2', list_5_dropdown2);
+        console.log(formParams.toString());
+
+        
+        fetch('http://127.0.0.1:5000/search', { //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            list_5_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No data found !");
+                return false;
+            }
+            else
+            {
+                list_5_table();
+                list_5_searched_user.style.display = 'block';
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+    }
+}
+
+var list_5_data = [];
+
+function list_5_table(){
+    var headers = Object.keys(list_5_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User ID'+'</th>';
+    headerRowHTML+='<th>'+'First Name'+'</th>';
+    headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_5_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_5_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_5_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
 }
 
 list_6.onclick = function(){
