@@ -551,7 +551,7 @@ list_2_searchbtn.onclick = function(){
         console.log(formParams.toString());
 
         
-        fetch('http://127.0.0.1:5000/search', { //Change the URL
+        fetch('http://127.0.0.1:5000/twoCategories', { //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -774,7 +774,7 @@ list_4.onclick = function(){
     const formParams = new URLSearchParams();
         console.log(formParams);
         
-        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        fetch('http://127.0.0.1:5000/users_most_items_on_date', {   //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -914,7 +914,7 @@ list_5_searchbtn.onclick = function(){
         console.log(formParams.toString());
 
         
-        fetch('http://127.0.0.1:5000/search', { //Change the URL
+        fetch('http://127.0.0.1:5000/favorite', { //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
