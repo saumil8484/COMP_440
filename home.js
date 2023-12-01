@@ -407,7 +407,7 @@ list_1.onclick = function(){
     const formParams = new URLSearchParams();
         console.log(formParams);
         
-        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        fetch('http://127.0.0.1:5000/most_expensive_items', {   //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -1176,7 +1176,7 @@ list_8.onclick = function(){
     const formParams = new URLSearchParams();
     console.log(formParams);
     
-    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+    fetch('http://127.0.0.1:5000/users_with_poor_reviews', {   //Change the URL
         method: 'POST',
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

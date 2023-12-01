@@ -9,6 +9,8 @@ from collections import OrderedDict
 import json
 from sqlalchemy import and_
 from sqlalchemy.sql import select
+from flask import jsonify
+from sqlalchemy.orm import aliased
 
 from datetime import datetime, time, timedelta
 
@@ -388,6 +390,40 @@ def datetime_serializer(obj):
         return obj.isoformat()
     return None
 
+# Phase 3 - 1
+
+@app.route('/most_expensive_items', methods=['POST'])
+def most_expensive_items():
+    if f.request.method == 'POST':
+        # Fetch distinct categories from the database
+        distinct_categories = db.session.query(Item.primary_category).distinct().all()
+
+        most_expensive_items_by_category = []
+
+        # Iterate through each distinct category
+        for category in distinct_categories:
+            category_name = category.primary_category
+
+            # Query to get the most expensive item in the current category
+            most_expensive_item = db.session.query(Item).filter(
+                Item.primary_category == category_name
+            ).order_by(Item.price.desc()).first()
+
+            if most_expensive_item:
+                # Serialize the most expensive item
+                serialized_item = {
+                    "aprimary_category": category_name,
+                    "bpid": most_expensive_item.item_id,
+                    "ctitle": most_expensive_item.title,
+                    "description": most_expensive_item.description,
+                    "eprice": most_expensive_item.price
+                }
+
+                most_expensive_items_by_category.append(serialized_item)
+
+        # Return the list of most expensive items by category
+        return jsonify(most_expensive_items_by_category)
+
 # Phase 3 - 2
 @app.route('/twoCategories', methods=['POST'])
 def two_categories():
@@ -497,6 +533,29 @@ def users_items_without_poor_reviews():
                 users_without_poor_reviews.append({"u_id": user.u_id, "firstname": user.firstname, "lastname": user.lastname})
 
     return f.jsonify(users_without_poor_reviews)
+
+# Phase 3 - 8
+
+@app.route('/users_with_poor_reviews', methods=['POST'])
+def users_with_poor_reviews():
+    # Fetch all reviews with "poor" rating
+    poor_reviews = Review.query.filter_by(rating='Poor').all()
+
+    # Extract user IDs from reviews
+    user_ids_with_poor_reviews = {review.u_id for review in poor_reviews}
+
+    # Fetch users corresponding to the extracted user IDs
+    users_with_poor_reviews = User.query.filter(User.u_id.in_(user_ids_with_poor_reviews)).all()
+
+    # Create a list of user details
+    users_details = [
+        {"au_id": user.u_id, 
+         "bfirstname": user.firstname, 
+         "clastname": user.lastname}
+        for user in users_with_poor_reviews
+    ]
+
+    return f.jsonify(users_details)
 
 if __name__ == '__main__':
     with app.app_context():
