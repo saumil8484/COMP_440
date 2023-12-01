@@ -388,6 +388,7 @@ def datetime_serializer(obj):
         return obj.isoformat()
     return None
 
+# Phase 3 - 2
 @app.route('/twoCategories', methods=['POST'])
 def two_categories():
     if f.request.method == 'POST':
@@ -432,6 +433,7 @@ def two_categories():
 
         return response_data
 
+# Phase 3 - 4
 # API route to list users who posted the most number of items on a specific date
 @app.route('/users_most_items_on_date', methods=['POST'])
 def users_most_items_on_date():
@@ -453,8 +455,9 @@ def users_most_items_on_date():
     max_item_count = result[0].item_count
     top_users = [(user.firstname) for user in result if user.item_count == max_item_count]
 
-    return f.jsonify({"top_users": top_users, "item_count": max_item_count, "success": True})
+    return f.jsonify({"top_users": top_users})
 
+# Phase 3 - 5
 @app.route('/favorite', methods=['POST'])
 def get_favorite_by_two_users():
     if f.request.method == 'POST':
@@ -469,11 +472,11 @@ def get_favorite_by_two_users():
 
         if filtered_users[0].favorite_user == filtered_users[1].favorite_user:
             user = User.query.filter_by(u_id=filtered_users[0].favorite_user).first()
-            return f.jsonify({"users": user.firstname, "success": True})
+            return f.jsonify({"u_id":user.u_id, "firstname": user.firstname, "lastname": user.lastname})
         
-        return f.jsonify({"success": False})
+        return f.jsonify({})
     
-
+# Phase 3 - 7
 @app.route('/users_without_poor_reviews', methods=['POST'])
 def users_items_without_poor_reviews():
     # Fetch all reviews
@@ -491,10 +494,9 @@ def users_items_without_poor_reviews():
     for user in users:
         for user_id in id_no_poor_reviews:
             if user.u_id == user_id:
-                users_without_poor_reviews.append(user.firstname)
+                users_without_poor_reviews.append({"u_id": user.u_id, "firstname": user.firstname, "lastname": user.lastname})
 
-    users_without_poor_reviews = list(set(users_without_poor_reviews))
-    return f.jsonify({"users": users_without_poor_reviews, "success": True})
+    return f.jsonify(users_without_poor_reviews)
 
 if __name__ == '__main__':
     with app.app_context():
