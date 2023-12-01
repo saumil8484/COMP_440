@@ -71,6 +71,7 @@ function lists(){
     list_8_functionalities_section.style.display= 'none';
     list_9_functionalities_section.style.display= 'none';
     list_10_functionalities_section.style.display= 'none';
+    user_list();
 }
 
 function logout(){ 
@@ -650,15 +651,13 @@ list_3.onclick = function(){
 
     user_list();
     let select = document.getElementById("list_3_dropdown");
-    //let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
-
-    for (let i = 0; i < user_list_data.length; i++) {
-        let optn = user_list_data[i];
-        let el = document.createElement("option");
-        el.textContent = optn;
-        el.value = optn;
-        select.appendChild(el);
-    }
+    user_list_data.forEach(function (item) {
+        var option = document.createElement("option");
+        option.text = item.firstname;
+        option.value = item.au_id;
+        select.add(option);
+    });
+    
 }
 
 list_3_searchbtn.onclick = function(){
@@ -672,11 +671,11 @@ list_3_searchbtn.onclick = function(){
 
     else{
         const formParams = new URLSearchParams();
-        formParams.append('user', list_3_dropdown);
+        formParams.append('u_id', list_3_dropdown);
         console.log(formParams.toString());
 
         
-        fetch('http://127.0.0.1:5000/search', { //Change the URL
+        fetch('http://127.0.0.1:5000/user_items_with_specific_ratings', { //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -716,6 +715,7 @@ function list_3_table(){
         headerRowHTML+='<th>'+'Product ID'+'</th>';
         headerRowHTML+='<th>'+'Title'+'</th>';
         headerRowHTML+='<th>'+'Description'+'</th>';
+        headerRowHTML+='<th>'+'Rating'+'</th>';
     headerRowHTML+='</tr>';       
 
     var allRecordsHTML='';
@@ -740,7 +740,7 @@ function user_list(){
     const formParams = new URLSearchParams();
         console.log(formParams);
         
-        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        fetch('http://127.0.0.1:5000/all_users', {   //Change the URL
             method: 'POST',
             headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -877,23 +877,19 @@ list_5.onclick = function(){
     user_list();
     let select1 = document.getElementById("list_5_dropdown1");
     let select2 = document.getElementById("list_5_dropdown2");
-    //let user_list_data = ["John", "Jacob", "Dave", "Max", "Sam"];
+    
 
-    for (let i = 0; i < user_list_data.length; i++) {
-        let optn = user_list_data[i];
-        let el = document.createElement("option");
-        el.textContent = optn;
-        el.value = optn;
-        select1.appendChild(el);
-    }
+    user_list_data.forEach(function (item) {
+        var option = document.createElement("option");
+        option.text = item.firstname;
+        select1.add(option);
+    });
 
-    for (let i = 0; i < user_list_data.length; i++) {
-        let optn = user_list_data[i];
-        let el = document.createElement("option");
-        el.textContent = optn;
-        el.value = optn;
-        select2.appendChild(el);
-    }
+    user_list_data.forEach(function (item) {
+        var option = document.createElement("option");
+        option.text = item.firstname;
+        select2.add(option);
+    });
 }
 
 list_5_searchbtn.onclick = function(){
@@ -913,8 +909,8 @@ list_5_searchbtn.onclick = function(){
 
     else{
         const formParams = new URLSearchParams();
-        formParams.append('user1', list_5_dropdown1);
-        formParams.append('user2', list_5_dropdown2);
+        formParams.append('userX', list_5_dropdown1);
+        formParams.append('userY', list_5_dropdown2);
         console.log(formParams.toString());
 
         
@@ -1079,7 +1075,7 @@ list_7.onclick = function(){
     const formParams = new URLSearchParams();
     console.log(formParams);
     
-    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+    fetch('http://127.0.0.1:5000/users_without_poor_reviews', {   //Change the URL
         method: 'POST',
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

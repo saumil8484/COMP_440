@@ -11,6 +11,7 @@ from sqlalchemy import and_
 from sqlalchemy.sql import select
 from flask import jsonify
 from sqlalchemy.orm import aliased
+from flask import request
 
 from datetime import datetime, time, timedelta
 
@@ -390,6 +391,24 @@ def datetime_serializer(obj):
         return obj.isoformat()
     return None
 
+# User List
+
+@app.route('/all_users', methods=['POST'])
+def all_users():
+    # Fetch all users from the User table
+    all_users = User.query.all()
+
+    # Create a list of user details
+    users_details = [
+        {
+            "au_id": user.u_id,
+            "firstname": user.firstname,
+        }
+        for user in all_users
+    ]
+
+    return f.jsonify(users_details)
+
 # Phase 3 - 1
 
 @app.route('/most_expensive_items', methods=['POST'])
@@ -469,6 +488,49 @@ def two_categories():
 
         return response_data
 
+
+# Phase 3 - 3
+
+@app.route('/user_items_with_specific_ratings', methods=['POST'])
+def user_items_with_specific_ratings():
+    if request.method == 'POST':
+        try:
+            u_id = request.form['u_id']
+
+            # Query to get items with ratings "Excellent" or "Good" for a specific user
+            items_with_specific_ratings = db.session.query(
+                Item.item_id,
+                Item.title,
+                Item.description,
+                Item.primary_category,
+                Item.sub_category1,
+                Item.sub_category2,
+                Item.price,
+                Review.rating
+            ).join(Review, Item.item_id == Review.item_id).filter(
+                Item.u_id == u_id,
+                (Review.rating == "Excellent") | (Review.rating == "Good"),
+            ).all()
+
+            # Serialize the items
+            serialized_items = [
+                OrderedDict([
+                    ("aitem_id", item.item_id),
+                    ("btitle", item.title),
+                    ("cdescription", item.description),
+                    ("drating", item.rating),
+                ])
+                for item in items_with_specific_ratings
+            ]
+
+            # Return the list of items with specific ratings
+            return jsonify(serialized_items)
+
+        except Exception as e:
+            return jsonify(error=str(e), success=False)
+
+
+
 # Phase 3 - 4
 # API route to list users who posted the most number of items on a specific date
 @app.route('/users_most_items_on_date', methods=['POST'])
@@ -530,7 +592,7 @@ def users_items_without_poor_reviews():
     for user in users:
         for user_id in id_no_poor_reviews:
             if user.u_id == user_id:
-                users_without_poor_reviews.append({"u_id": user.u_id, "firstname": user.firstname, "lastname": user.lastname})
+                users_without_poor_reviews.append({"au_id": user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
 
     return f.jsonify(users_without_poor_reviews)
 
