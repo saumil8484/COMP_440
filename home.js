@@ -5,6 +5,16 @@ let initialise_database_section = document.getElementById("initialise_database")
 let lists_section = document.getElementById("lists");
 let lists_buttons_section = document.getElementById("lists_buttons");
 let lists_functionalities_section = document.getElementById("lists_functionalities");
+let list_1_functionalities_section = document.getElementById("list_1_functionalities");
+let list_2_functionalities_section = document.getElementById("list_2_functionalities");
+let list_3_functionalities_section = document.getElementById("list_3_functionalities");
+let list_4_functionalities_section = document.getElementById("list_4_functionalities");
+let list_5_functionalities_section = document.getElementById("list_5_functionalities");
+let list_6_functionalities_section = document.getElementById("list_6_functionalities");
+let list_7_functionalities_section = document.getElementById("list_7_functionalities");
+let list_8_functionalities_section = document.getElementById("list_8_functionalities");
+let list_9_functionalities_section = document.getElementById("list_9_functionalities");
+let list_10_functionalities_section = document.getElementById("list_10_functionalities");
 var search_form = document.getElementById("search_form");
 var review_item = document.getElementById("review_item");
 
@@ -51,6 +61,16 @@ function lists(){
     lists_section.style.display= 'block';
     lists_buttons_section.style.display= 'block';
     lists_functionalities_section.style.display= 'none';
+    list_1_functionalities_section.style.display= 'none';
+    list_2_functionalities_section.style.display= 'none';
+    list_3_functionalities_section.style.display= 'none';
+    list_4_functionalities_section.style.display= 'none';
+    list_5_functionalities_section.style.display= 'none';
+    list_6_functionalities_section.style.display= 'none';
+    list_7_functionalities_section.style.display= 'none';
+    list_8_functionalities_section.style.display= 'none';
+    list_9_functionalities_section.style.display= 'none';
+    list_10_functionalities_section.style.display= 'none';
 }
 
 function logout(){ 
@@ -95,7 +115,6 @@ submitbtn.onclick = function(){
         formParams.append('sub_category1', sub_category1);
         formParams.append('sub_category2', sub_category2);
         formParams.append('price', price);
-        console.log("MY Bad");
 
         
         fetch('http://127.0.0.1:5000/addItems', {
@@ -157,7 +176,6 @@ searchbtn.onclick = function(){
             console.log(data);
             if(Object.keys(data).length === 0)
             {
-                console.log("No LOL");
                 window.alert ("No items found for this category !");
                 return false;
             }
@@ -337,7 +355,6 @@ submit_review_btn.onclick = function(){
 initialise_databasebtn.onclick = function(){
     const formParams = new URLSearchParams();
         console.log(formParams);
-        console.log("MY Bad");
         
         fetch('http://127.0.0.1:5000/initDatabase', {
             method: 'POST',
@@ -367,4 +384,854 @@ initialise_databasebtn.onclick = function(){
             console.error('Error:', error);
         });
         return true;
+}
+
+function backbtn_list(){
+    lists_buttons_section.style.display= 'block';
+    lists_functionalities_section.style.display= 'none';
+    list_1_functionalities_section.style.display= 'none';
+    list_2_functionalities_section.style.display= 'none';
+    list_3_functionalities_section.style.display= 'none';
+    list_4_functionalities_section.style.display= 'none';
+    list_5_functionalities_section.style.display= 'none';
+    list_6_functionalities_section.style.display= 'none';
+    list_7_functionalities_section.style.display= 'none';
+    list_8_functionalities_section.style.display= 'none';
+    list_9_functionalities_section.style.display= 'none';
+    list_10_functionalities_section.style.display= 'none';
+}
+
+
+list_1.onclick = function(){
+
+    const formParams = new URLSearchParams();
+        console.log(formParams);
+        
+        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            list_1_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No data found !");
+                return false;
+
+            }
+            else
+            {
+                list_1_table();
+                lists_buttons_section.style.display= 'none';
+                lists_functionalities_section.style.display= 'block';
+                list_1_functionalities_section.style.display= 'block';
+                list_2_functionalities_section.style.display= 'none';
+                list_3_functionalities_section.style.display= 'none';
+                list_4_functionalities_section.style.display= 'none';
+                list_5_functionalities_section.style.display= 'none';
+                list_6_functionalities_section.style.display= 'none';
+                list_7_functionalities_section.style.display= 'none';
+                list_8_functionalities_section.style.display= 'none';
+                list_9_functionalities_section.style.display= 'none';
+                list_10_functionalities_section.style.display= 'none';
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+}
+
+//Sample JSON array for list 1
+var sample_list_1_data = [
+    { "primary_category" : "Electronics",
+    "pid" : 1, 
+    "title" : "Smartphone",
+    "description" : "This is iPhone 15",
+    "price" : "1200"},
+                
+    { 
+        "primary_category" : "Electronics",
+    "pid" : 2, 
+    "title" : "Watch",
+    "description" : "This is Wrist watch",
+    "price" : "100"},
+    
+    { "primary_category" : "Electronics",
+    "pid" : 3, 
+    "title" : "headphones",
+    "description" : "This are ANC headphones",
+    "price" : "50"},
+    
+    { "primary_category" : "Sports",
+    "pid" : 4, 
+    "title" : "bicycle",
+    "description" : "This is bicycle",
+    "price" : "200"},
+    
+    { "primary_category" : "Book",
+    "pid" : 5, 
+    "title" : "Database Design Textbook",
+    "description" : "This is textbook",
+    "price" : "60"}];
+
+var list_1_data = [];
+
+function list_1_table(){
+    var headers = Object.keys(list_1_data[0]);
+    
+    var headerRowHTML='<tr>';
+        headerRowHTML+='<th>'+'Primary Category'+'</th>';
+        headerRowHTML+='<th>'+'Product Id'+'</th>';
+        headerRowHTML+='<th>'+'Title'+'</th>';
+        headerRowHTML+='<th>'+'Description'+'</th>';
+        headerRowHTML+='<th>'+'Price ($)'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_1_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_1_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_1_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+
+list_2.onclick = function(){
+    lists_buttons_section.style.display= 'none';
+    lists_functionalities_section.style.display= 'block';
+    list_1_functionalities_section.style.display= 'none';
+    list_2_functionalities_section.style.display= 'block';
+    list_3_functionalities_section.style.display= 'none';
+    list_4_functionalities_section.style.display= 'none';
+    list_5_functionalities_section.style.display= 'none';
+    list_6_functionalities_section.style.display= 'none';
+    list_7_functionalities_section.style.display= 'none';
+    list_8_functionalities_section.style.display= 'none';
+    list_9_functionalities_section.style.display= 'none';
+    list_10_functionalities_section.style.display= 'none';
+}
+
+list_2_searchbtn.onclick = function(){
+    var list_2_search_category1 = document.forms.list_2_searchForm.list_2_category1.value;
+    var list_2_search_category2 = document.forms.list_2_searchForm.list_2_category2.value;
+    let list_2_searched_category = document.getElementById("list_2_searched_category");
+
+    if (list_2_search_category1 == "") {
+        window.alert("Please first category !");
+        return false;
+    }
+    
+    else if (list_2_search_category2 == "") {
+        window.alert("Please second category !");
+        return false;
+    }
+
+    else{
+        const formParams = new URLSearchParams();
+        formParams.append('category1', list_2_search_category1);
+        formParams.append('category2', list_2_search_category2);
+        console.log(formParams.toString());
+
+        
+        fetch('http://127.0.0.1:5000/search', { //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            list_2_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No users found for both of this category !");
+                return false;
+            }
+            else
+            {
+                list_2_table();
+                list_2_searched_category.style.display = 'block';
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+    }
+}
+
+//Sample JSON array for list 2
+var sample_list_2_data = [
+    { "u_id" : "1",
+    "firstname" : "abc",
+    "lastname" : "xyz"},
+    
+    { "u_id" : "2",
+    "firstname" : "John",
+    "lastname" : "asd"},
+    
+    { "u_id" : "3",
+    "firstname" : "hyjnuabc",
+    "lastname" : "vwrwxyz"},
+    
+    { "u_id" : "4",
+    "firstname" : "weewabc",
+    "lastname" : "xcwfyz"},
+    
+    { "u_id" : "5",
+    "firstname" : "asbc",
+    "lastname" : "xyfwwcwz"}];
+
+var list_2_data = [];
+
+function list_2_table(){
+    var headers = Object.keys(list_2_data[0]);
+    
+    var headerRowHTML='<tr>';
+        headerRowHTML+='<th>'+'User ID'+'</th>';
+        headerRowHTML+='<th>'+'First Name'+'</th>';
+        headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_2_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_2_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_2_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+
+list_3.onclick = function(){
+    lists_buttons_section.style.display= 'none';
+    lists_functionalities_section.style.display= 'block';
+    list_1_functionalities_section.style.display= 'none';
+    list_2_functionalities_section.style.display= 'none';
+    list_3_functionalities_section.style.display= 'block';
+    list_4_functionalities_section.style.display= 'none';
+    list_5_functionalities_section.style.display= 'none';
+    list_6_functionalities_section.style.display= 'none';
+    list_7_functionalities_section.style.display= 'none';
+    list_8_functionalities_section.style.display= 'none';
+    list_9_functionalities_section.style.display= 'none';
+    list_10_functionalities_section.style.display= 'none';
+}
+
+
+
+list_4.onclick = function(){
+    
+    const formParams = new URLSearchParams();
+        console.log(formParams);
+        
+        fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formParams.toString()
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // Handle the response data here
+            list_4_data = data;
+            console.log(data);
+            if(Object.keys(data).length === 0)
+            {
+                window.alert ("No data found !");
+                return false;
+
+            }
+            else
+            {
+                list_4_table();
+                lists_buttons_section.style.display= 'none';
+                lists_functionalities_section.style.display= 'block';
+                list_1_functionalities_section.style.display= 'none';
+                list_2_functionalities_section.style.display= 'none';
+                list_3_functionalities_section.style.display= 'none';
+                list_4_functionalities_section.style.display= 'block';
+                list_5_functionalities_section.style.display= 'none';
+                list_6_functionalities_section.style.display= 'none';
+                list_7_functionalities_section.style.display= 'none';
+                list_8_functionalities_section.style.display= 'none';
+                list_9_functionalities_section.style.display= 'none';
+                list_10_functionalities_section.style.display= 'none';
+                return true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        return true;
+}
+
+//Sample JSON array for list 4
+var sample_list_4_data = [
+    { "item_count" : "1",
+    "firstname" : "abc"},
+    
+    { "item_count" : "2",
+    "firstname" : "John"},
+    
+    { "item_count" : "3",
+    "firstname" : "hyjnuabc"},
+    
+    { "item_count" : "4",
+    "firstname" : "weewabc"},
+    
+    { "item_count" : "5",
+    "firstname" : "asbc"}];
+
+var list_4_data = [];
+
+function list_4_table(){
+    var headers = Object.keys(list_4_data[0]);
+    
+    var headerRowHTML='<tr>';
+        headerRowHTML+='<th>'+'Total number of items posted'+'</th>';
+        headerRowHTML+='<th>'+'User Firstname'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_4_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_4_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_4_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+list_5.onclick = function(){
+    lists_buttons_section.style.display= 'none';
+    lists_functionalities_section.style.display= 'block';
+    list_1_functionalities_section.style.display= 'none';
+    list_2_functionalities_section.style.display= 'none';
+    list_3_functionalities_section.style.display= 'none';
+    list_4_functionalities_section.style.display= 'none';
+    list_5_functionalities_section.style.display= 'block';
+    list_6_functionalities_section.style.display= 'none';
+    list_7_functionalities_section.style.display= 'none';
+    list_8_functionalities_section.style.display= 'none';
+    list_9_functionalities_section.style.display= 'none';
+    list_10_functionalities_section.style.display= 'none';
+}
+
+list_6.onclick = function(){
+    
+    const formParams = new URLSearchParams();
+    console.log(formParams);
+    
+    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formParams.toString()
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        // Handle the response data here
+        list_6_data = data;
+        console.log(data);
+        if(Object.keys(data).length === 0)
+        {
+            window.alert ("No data found !");
+            return false;
+
+        }
+        else
+        {
+            list_6_table();
+            lists_buttons_section.style.display= 'none';
+            lists_functionalities_section.style.display= 'block';
+            list_1_functionalities_section.style.display= 'none';
+            list_2_functionalities_section.style.display= 'none';
+            list_3_functionalities_section.style.display= 'none';
+            list_4_functionalities_section.style.display= 'none';
+            list_5_functionalities_section.style.display= 'none';
+            list_6_functionalities_section.style.display= 'block';
+            list_7_functionalities_section.style.display= 'none';
+            list_8_functionalities_section.style.display= 'none';
+            list_9_functionalities_section.style.display= 'none';
+            list_10_functionalities_section.style.display= 'none';
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    return true;
+}
+
+//Sample JSON array for list 6
+var sample_list_6_data = [
+    { "u_id" : "1",
+    "firstname" : "abc",
+    "lastname" : "xyz"},
+    
+    { "u_id" : "2",
+    "firstname" : "John",
+    "lastname" : "asd"},
+    
+    { "u_id" : "3",
+    "firstname" : "hyjnuabc",
+    "lastname" : "vwrwxyz"},
+    
+    { "u_id" : "4",
+    "firstname" : "weewabc",
+    "lastname" : "xcwfyz"},
+    
+    { "u_id" : "5",
+    "firstname" : "asbc",
+    "lastname" : "xyfwwcwz"}];
+
+var list_6_data = [];
+
+function list_6_table(){
+    var headers = Object.keys(list_6_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User ID'+'</th>';
+    headerRowHTML+='<th>'+'First Name'+'</th>';
+    headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_6_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_6_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_6_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+list_7.onclick = function(){
+    
+    const formParams = new URLSearchParams();
+    console.log(formParams);
+    
+    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formParams.toString()
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        // Handle the response data here
+        list_7_data = data;
+        console.log(data);
+        if(Object.keys(data).length === 0)
+        {
+            window.alert ("No data found !");
+            return false;
+
+        }
+        else
+        {
+            list_7_table();
+            lists_buttons_section.style.display= 'none';
+            lists_functionalities_section.style.display= 'block';
+            list_1_functionalities_section.style.display= 'none';
+            list_2_functionalities_section.style.display= 'none';
+            list_3_functionalities_section.style.display= 'none';
+            list_4_functionalities_section.style.display= 'none';
+            list_5_functionalities_section.style.display= 'none';
+            list_6_functionalities_section.style.display= 'none';
+            list_7_functionalities_section.style.display= 'block';
+            list_8_functionalities_section.style.display= 'none';
+            list_9_functionalities_section.style.display= 'none';
+            list_10_functionalities_section.style.display= 'none';
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    return true;
+}
+
+//Sample JSON array for list 7
+var sample_list_7_data = [
+    { "u_id" : "1",
+    "firstname" : "abc",
+    "lastname" : "xyz"},
+    
+    { "u_id" : "2",
+    "firstname" : "John",
+    "lastname" : "asd"},
+    
+    { "u_id" : "3",
+    "firstname" : "hyjnuabc",
+    "lastname" : "vwrwxyz"},
+    
+    { "u_id" : "4",
+    "firstname" : "weewabc",
+    "lastname" : "xcwfyz"},
+    
+    { "u_id" : "5",
+    "firstname" : "asbc",
+    "lastname" : "xyfwwcwz"}];
+
+var list_7_data = [];
+
+function list_7_table(){
+    var headers = Object.keys(list_7_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User ID'+'</th>';
+    headerRowHTML+='<th>'+'First Name'+'</th>';
+    headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_7_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_7_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_7_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+list_8.onclick = function(){
+        
+    const formParams = new URLSearchParams();
+    console.log(formParams);
+    
+    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formParams.toString()
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        // Handle the response data here
+        list_8_data = data;
+        console.log(data);
+        if(Object.keys(data).length === 0)
+        {
+            window.alert ("No data found !");
+            return false;
+
+        }
+        else
+        {
+            list_8_table();
+            lists_buttons_section.style.display= 'none';
+            lists_functionalities_section.style.display= 'block';
+            list_1_functionalities_section.style.display= 'none';
+            list_2_functionalities_section.style.display= 'none';
+            list_3_functionalities_section.style.display= 'none';
+            list_4_functionalities_section.style.display= 'none';
+            list_5_functionalities_section.style.display= 'none';
+            list_6_functionalities_section.style.display= 'none';
+            list_7_functionalities_section.style.display= 'none';
+            list_8_functionalities_section.style.display= 'block';
+            list_9_functionalities_section.style.display= 'none';
+            list_10_functionalities_section.style.display= 'none';
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    return true;
+}
+
+//Sample JSON array for list 8
+var sample_list_8_data = [
+    { "u_id" : "1",
+    "firstname" : "abc",
+    "lastname" : "xyz"},
+    
+    { "u_id" : "2",
+    "firstname" : "John",
+    "lastname" : "asd"},
+    
+    { "u_id" : "3",
+    "firstname" : "hyjnuabc",
+    "lastname" : "vwrwxyz"},
+    
+    { "u_id" : "4",
+    "firstname" : "weewabc",
+    "lastname" : "xcwfyz"},
+    
+    { "u_id" : "5",
+    "firstname" : "asbc",
+    "lastname" : "xyfwwcwz"}];
+
+var list_8_data = [];
+
+function list_8_table(){
+    var headers = Object.keys(list_8_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User ID'+'</th>';
+    headerRowHTML+='<th>'+'First Name'+'</th>';
+    headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_8_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_8_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_8_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+
+list_9.onclick = function(){
+    
+    const formParams = new URLSearchParams();
+    console.log(formParams);
+    
+    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formParams.toString()
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        // Handle the response data here
+        list_9_data = data;
+        console.log(data);
+        if(Object.keys(data).length === 0)
+        {
+            window.alert ("No data found !");
+            return false;
+
+        }
+        else
+        {
+            list_9_table();
+            lists_buttons_section.style.display= 'none';
+            lists_functionalities_section.style.display= 'block';
+            list_1_functionalities_section.style.display= 'none';
+            list_2_functionalities_section.style.display= 'none';
+            list_3_functionalities_section.style.display= 'none';
+            list_4_functionalities_section.style.display= 'none';
+            list_5_functionalities_section.style.display= 'none';
+            list_6_functionalities_section.style.display= 'none';
+            list_7_functionalities_section.style.display= 'none';
+            list_8_functionalities_section.style.display= 'none';
+            list_9_functionalities_section.style.display= 'block';
+            list_10_functionalities_section.style.display= 'none';
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    return true;
+}
+
+//Sample JSON array for list 9
+var sample_list_9_data = [
+    { "u_id" : "1",
+    "firstname" : "abc",
+    "lastname" : "xyz"},
+    
+    { "u_id" : "2",
+    "firstname" : "John",
+    "lastname" : "asd"},
+    
+    { "u_id" : "3",
+    "firstname" : "hyjnuabc",
+    "lastname" : "vwrwxyz"},
+    
+    { "u_id" : "4",
+    "firstname" : "weewabc",
+    "lastname" : "xcwfyz"},
+    
+    { "u_id" : "5",
+    "firstname" : "asbc",
+    "lastname" : "xyfwwcwz"}];
+
+var list_9_data = [];
+
+function list_9_table(){
+    var headers = Object.keys(list_9_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User ID'+'</th>';
+    headerRowHTML+='<th>'+'First Name'+'</th>';
+    headerRowHTML+='<th>'+'Last Name'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_9_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_9_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_9_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
+}
+
+
+list_10.onclick = function(){
+    
+    const formParams = new URLSearchParams();
+    console.log(formParams);
+    
+    fetch('http://127.0.0.1:5000/initDatabase', {   //Change the URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formParams.toString()
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        // Handle the response data here
+        list_10_data = data;
+        console.log(data);
+        if(Object.keys(data).length === 0)
+        {
+            window.alert ("No data found !");
+            return false;
+
+        }
+        else
+        {
+            list_10_table();
+            lists_buttons_section.style.display= 'none';
+            lists_functionalities_section.style.display= 'block';
+            list_1_functionalities_section.style.display= 'none';
+            list_2_functionalities_section.style.display= 'none';
+            list_3_functionalities_section.style.display= 'none';
+            list_4_functionalities_section.style.display= 'none';
+            list_5_functionalities_section.style.display= 'none';
+            list_6_functionalities_section.style.display= 'none';
+            list_7_functionalities_section.style.display= 'none';
+            list_8_functionalities_section.style.display= 'none';
+            list_9_functionalities_section.style.display= 'none';
+            list_10_functionalities_section.style.display= 'block';
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    return true;
+}
+
+//Sample JSON array for list 10
+var sample_list_10_data = [
+    {"firstname1" : "abc",
+    "firstname2" : "xyz"},
+    
+    {"firstname1" : "John",
+    "firstname2" : "asd"},
+    
+    {"firstname1" : "hyjnuabc",
+    "firstname2" : "vwrwxyz"},
+    
+    {"firstname1" : "weewabc",
+    "firstname2" : "xcwfyz"},
+    
+    {"firstname1" : "asbc",
+    "firstname2" : "xyfwwcwz"}];
+
+var list_10_data = [];
+
+function list_10_table(){
+    var headers = Object.keys(list_10_data[0]);
+    
+    var headerRowHTML='<tr>';
+    headerRowHTML+='<th>'+'User 1 from Pair'+'</th>';
+    headerRowHTML+='<th>'+'User 2 from pair'+'</th>';
+    headerRowHTML+='</tr>';       
+
+    var allRecordsHTML='';
+    for(var i=0;i<list_10_data.length;i++){
+     
+
+        allRecordsHTML+='<tr>';
+        for(var j=0;j<headers.length;j++){
+            var header=headers[j];
+            allRecordsHTML+='<td>'+list_10_data[i][header]+'</td>';
+        }
+        allRecordsHTML+='</tr>';
+         
+    }
+     
+    var table=document.getElementById("list_10_table");
+    table.innerHTML=headerRowHTML + allRecordsHTML;
 }

@@ -110,7 +110,7 @@
                     </div><br>
                     <div class="btn-field">
                         <button type="button" id="list_3"><h3>List of items posted by specific user, having "Excellent" or "Good" comment</h3></button>
-                        <button type="button" id="list_4"><h3>List of users who posted most number of items on <!--Enter date here--> </h3></button>
+                        <button type="button" id="list_4"><h3>List of users who posted most number of items on November 12th, 2023 </h3></button>
                     </div><br>
                     <div class="btn-field">
                         <button type="button" id="list_5"><h3>List of users favorited by both of two specific users</h3></button>
@@ -126,7 +126,89 @@
                     </div><br>
                 </div>
                 <div id="lists_functionalities">
-                    <p>Functionalities</p>
+                    <div id="list_1_functionalities" style="display:none">
+                        <h2>List of most expensive items in each category: </h2>
+                        <table id="list_1_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_2_functionalities" style="display:none">
+                        <h2>List of users who posted at least two items in different category on the same day: </h2>
+                        <form name="list_2_searchForm" method="post" id="list_2_search_form">
+                            <div class="input-group">
+                                <div class="input-field" id="list_2_search">
+                                    <input type="text" placeholder="Type First category..." name="list_2_category1">
+                                    <input type="text" placeholder="Type Second category..." name="list_2_category2">
+                                </div>
+                                <div class="btn-field">
+                                    <button type="button" id="list_2_searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                </div>
+                            </div>
+                        </form><br><br>
+                        <div id="list_2_searched_category" style="display:none">    
+                            <table id="list_2_table"></table><br><br><br>
+                        </div>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_3_functionalities" style="display:none">
+                        <h2>List of items posted by specific user, having "Excellent" or "Good" comment: </h2>
+                        <table id="list_3_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_4_functionalities" style="display:none">
+                        <h2>List of users who posted most number of items on November 12th, 2023: </h2>
+                        <table id="list_4_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_5_functionalities" style="display:none">
+                        <h2>List of users favorited by both of two specific users: </h2>
+                        <table id="list_5_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_6_functionalities" style="display:none">
+                        <h2>List of users who never have posted "Excellent" items: </h2>
+                        <table id="list_6_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_7_functionalities" style="display:none">
+                        <h2>List of users who never posted a "Poor" review: </h2>
+                        <table id="list_7_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_8_functionalities" style="display:none">
+                        <h2>List of users who have posted "Poor" review only: </h2>
+                        <table id="list_8_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_9_functionalities" style="display:none">
+                        <h2>List of users whose every item never got a "Poor" review: </h2>
+                        <table id="list_9_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
+                    <div id="list_10_functionalities" style="display:none">
+                        <h2>List of user pair that they give each other "Excellent" review for every item posted by them: </h2>
+                        <table id="list_10_table"></table><br><br><br>
+                        <div class="btn-field">
+                            <button type="button" onclick="backbtn_list()">Back</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
