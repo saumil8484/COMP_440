@@ -33,7 +33,7 @@ Nevil Shingala
 - Created Initialize DB API
 - Created add item API
 
-Phase 3 (Demo video)
+Phase 3 (Demo video - https://youtu.be/ve7pS4mynFU)
 Omkar Lubal
 API creation for 
 - List the users who posted at least two items that were posted on the same day, one has a category of X, and another has a category of Y.
