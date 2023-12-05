@@ -734,7 +734,7 @@ def never_posted_poor_review():
                      if i in never_posted_poor_review:
                         continue
                      else:
-                        never_posted_poor_review.append({"u_id": user.u_id, "firstname": user.firstname, "lastname": user.lastname})
+                        never_posted_poor_review.append({"au_id": user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
 
         return f.jsonify(never_posted_poor_review)
 
