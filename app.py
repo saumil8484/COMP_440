@@ -552,10 +552,16 @@ def users_most_items_on_date():
 
     # Check if there is a tie
     # print(f.jsonify((result[0])))
+
     max_item_count = result[0].item_count
     top_users = [(user.firstname) for user in result if user.item_count == max_item_count]
+    result = []
+    i = 1
+    for u in top_users:
+        result.append({"aitem_count": i , "bfirstname": u})
+        i +=1
+    return f.jsonify(result)
 
-    return f.jsonify({"top_users": top_users})
 
 # Phase 3 - 5
 @app.route('/favorite', methods=['POST'])
@@ -569,10 +575,11 @@ def get_favorite_by_two_users():
         user_set.add(userY)
 
         filtered_users = User.query.filter(User.username.in_(user_set)).all()
-
+        a=[]
         if filtered_users[0].favorite_user == filtered_users[1].favorite_user:
             user = User.query.filter_by(u_id=filtered_users[0].favorite_user).first()
-            return f.jsonify({"u_id":user.u_id, "firstname": user.firstname, "lastname": user.lastname})
+            a.append({"au_id":user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
+            return f.jsonify(a)
         
         return f.jsonify({})
 # Phase 3 - 6
@@ -639,18 +646,17 @@ def users_items_without_poor_reviews():
     all_reviews = Review.query.all()
 
     # Get item IDs with "poor" reviews
-    id_no_poor_reviews = {review.u_id for review in all_reviews if review.rating.lower() != 'poor'}
+    id_poor_reviews = {review.u_id for review in all_reviews if review.rating.lower() == 'poor'}
 
     # Filter items without "poor" reviews
     users = User.query.all()
 
     # Get users corresponding to items without "poor" reviews
     users_without_poor_reviews = []
-        
+
     for user in users:
-        for user_id in id_no_poor_reviews:
-            if user.u_id == user_id:
-                users_without_poor_reviews.append({"au_id": user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
+        if user.u_id not in id_poor_reviews:
+            users_without_poor_reviews.append({"au_id": user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
 
     return f.jsonify(users_without_poor_reviews)
 
@@ -697,7 +703,6 @@ def never_posted_poor_review():
                 if no==id:
                     id_no_poor_reviews.remove(id)
                
-        print(id_no_poor_reviews)
         # Filter items without "poor" reviews
         users = User.query.all()
         print(id)
@@ -713,14 +718,14 @@ def never_posted_poor_review():
         for key in Item_and_User:
             for item_id in id_no_poor_reviews:
                 if key == item_id:
-                    print(key,item_id,Item_and_User[item_id])
+                    
                     u_no.append(Item_and_User[item_id])
                 else:
                     F.append(Item_and_User[item_id])
 
-        print(F)
+        
         never_posted_poor_review=[]
-        print(u_no)
+        
         u_no=list(set(u_no))
         # Creating a list that contains firstname of user from U_No
         for user in users:
@@ -754,19 +759,13 @@ def excellent_review_user_pairs():
             for item in all_items:
                 if item.item_id == reviews.item_id:
                     exc_item_user[reviews.u_id] = item.u_id
-                
-    print(exc_item_user)
-    print(lol)
+
     user_list=[]
 
     list_of_pairs = list(exc_item_user.items())
-    print(list_of_pairs)
     i=0
     for i in range(0,len(list_of_pairs)):
         if i<(len(list_of_pairs)-1):
-            print(len(list_of_pairs))
-            print(list_of_pairs[i])
-            print(i,i+1)
             are_lists_equal = Counter(list_of_pairs[i]) == Counter(list_of_pairs[i+1])
             if are_lists_equal:
                 user_list.append(list_of_pairs[i])
@@ -775,19 +774,14 @@ def excellent_review_user_pairs():
             are_lists_equal = Counter(list_of_pairs[0]) == Counter(list_of_pairs[i])
             if are_lists_equal:
                 user_list.append(list_of_pairs[0])
-            
-    print(user_list)      
 
     flat_user_list = [item for sublist in user_list for item in sublist]
-
-    print(flat_user_list)
     excellent_review_user_pairs=[]
     for user in all_users:
         for i in range(0,len(flat_user_list)):
             if user.u_id==flat_user_list[i]:
                 excellent_review_user_pairs.append(user.firstname)
     i=0
-    print(excellent_review_user_pairs)
     Final=[]
     for i in range(0,len(excellent_review_user_pairs)):
         if i<(len(excellent_review_user_pairs)-1):
