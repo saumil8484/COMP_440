@@ -663,25 +663,34 @@ def users_items_without_poor_reviews():
 # Phase 3 - 8
 
 @app.route('/users_with_poor_reviews', methods=['POST'])
-def users_with_poor_reviews():
-    # Fetch all reviews with "poor" rating
-    poor_reviews = Review.query.filter_by(rating='Poor').all()
+def users_with_only_poor_reviews():
+    # Fetch all reviews
+    all_reviews = Review.query.all()
 
-    # Extract user IDs from reviews
-    user_ids_with_poor_reviews = {review.u_id for review in poor_reviews}
+    # Create sets to keep track of users with "poor" reviews and users with other types of reviews
+    users_with_poor_reviews = set()
+    users_with_other_reviews = set()
 
-    # Fetch users corresponding to the extracted user IDs
-    users_with_poor_reviews = User.query.filter(User.u_id.in_(user_ids_with_poor_reviews)).all()
+    # Iterate through reviews and populate the sets
+    for review in all_reviews:
+        if review.rating.lower() == 'poor':
+            users_with_poor_reviews.add(review.u_id)
+        else:
+            users_with_other_reviews.add(review.u_id)
 
-    # Create a list of user details
-    users_details = [
-        {"au_id": user.u_id, 
-         "bfirstname": user.firstname, 
-         "clastname": user.lastname}
-        for user in users_with_poor_reviews
+    # Find users who have only "poor" reviews
+    users_only_poor_reviews = users_with_poor_reviews - users_with_other_reviews
+
+    # Filter users based on users_with_only_poor_reviews
+    users = User.query.filter(User.u_id.in_(users_only_poor_reviews)).all()
+    users_only_poor_reviews_info = [
+        {"au_id": user.u_id, "bfirstname": user.firstname, "clastname": user.lastname}
+        for user in users
     ]
 
-    return f.jsonify(users_details)
+    return jsonify(users_only_poor_reviews_info)
+    
+
 # Phase 3-9
 @app.route('/never_posted_poor_review', methods=['POST'])
 def never_posted_poor_review():
