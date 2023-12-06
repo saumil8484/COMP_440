@@ -131,7 +131,7 @@ submitbtn.onclick = function(){
             console.log(data);
             if(data.success == false)
             {
-                window.alert ("You cannot post items more than 3 times per day !");
+                window.alert (data.message);
                 return false;
             }
             else if(data.success == true)
@@ -335,7 +335,7 @@ submit_review_btn.onclick = function(){
             console.log(data);
             if(data.success == false)
             {
-                window.alert ("You cannot post review to your own items !");
+                window.alert (data.message);
                 return false;
             }
             else if(data.success == true)

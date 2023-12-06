@@ -107,7 +107,7 @@ def register():
             Lname = f.request.form['lastname']
 
             if is_sql_injection(username) or is_sql_injection(password) or is_sql_injection(email) or is_sql_injection(Fname) or is_sql_injection(Lname):
-                return f.jsonify(error="Invalid Input")
+                return f.jsonify(message="Invalid Input", success=False)
 
             new_user = User(username=username, password=password, email=email, firstname=Fname, lastname=Lname)
             db.session.add(new_user)
@@ -140,6 +140,11 @@ def post_review():
         rating = f.request.form['rating']
         description = f.request.form['description']
         print("Saving review: item_id: " + item_id + " rating: " + rating + " description: " + description)
+
+        # Check if user posted this item
+        item = Item.query.filter_by(item_id=item_id, u_id=u_id).first()
+        if item:
+            return f.jsonify(message="Cannot post review to your own item.", success=False)
 
         # Check if limit is exceeded or already reviewed this product
         review = Review.query.filter_by(item_id=item_id, u_id=u_id).first()
@@ -190,7 +195,7 @@ def post_review():
 @app.route('/addItems',methods=['POST'])
 def addItems():
     if f.request.method== 'POST':
-        # print(f.request.form['u_id'])
+        
         u_id =f.request.form['user_ID']
         title = f.request.form['title']
         description = f.request.form['description']
@@ -198,7 +203,7 @@ def addItems():
         Scategory = f.request.form['sub_category1']
         Tcategory = f.request.form['sub_category2']
         price = f.request.form['price']  
-        print("LOL")
+        
 
 
 
@@ -215,7 +220,9 @@ def addItems():
 
           # check if post was today
           post_was_today = start_of_day <= action_counter.first_item_time <= end_of_day
+          
           if action_counter.daily_item_count >= 3 and post_was_today:
+              
               return f.jsonify(message="You have reached the limit of item that can be posted in a day", success=False)
         
         # Save Post
@@ -258,16 +265,16 @@ def initilize_Database():
     if f.request.method== 'POST':
 #   ------------------------------------User Table-----------------------------------------------------------
        
-            userinsert=[[11,"John","John123","John@gmail.com","John","Smith", 3,"2023-12-03 08:40:00"],
-                        [12,"Mary","Mary1","Mary@gmail.com","Mary","Johnson",  3,"2023-11-02 10:40:00"],
-                        [13,"Alex","Alex2","Alex@gmail.com","Alex","Williams", 4,"2023-10-30 18:40:00"],
-                        [14,"David","David3","David@gmail.com","David","Brown", 1,"2023-10-31 11:40:00"],
-                        [15,"Emily","Emily112","Emily@gmail.com","Emily","Davis", 4,"2023-12-01 15:40:00"],
+            userinsert=[[11,"John","John123","John@gmail.com","John","Smith", 13,"2023-12-03 08:40:00"],
+                        [12,"Mary","Mary1","Mary@gmail.com","Mary","Johnson",  13,"2023-11-02 10:40:00"],
+                        [13,"Alex","Alex2","Alex@gmail.com","Alex","Williams", 14,"2023-10-30 18:40:00"],
+                        [14,"David","David3","David@gmail.com","David","Brown", 11,"2023-10-31 11:40:00"],
+                        [15,"Emily","Emily112","Emily@gmail.com","Emily","Davis", 14,"2023-12-01 15:40:00"],
             ]
 
             for i in range(0,len(userinsert)):
                 date_created =datetime.strptime(userinsert[i][7], '%Y-%m-%d %H:%M:%S')
-                print(date_created)
+                
                 newUser = User(u_id=userinsert[i][0],
                                username=userinsert[i][1],
                                password=userinsert[i][2],
@@ -278,7 +285,7 @@ def initilize_Database():
                                date_created=date_created)
                 db.session.add(newUser)
                 db.session.commit()
-            print(newUser)
+            
 
         #   ------------------------------------ Items Table---------------------------------------------------------
             itemsInsert=[[1,"Watch","Analog Watch","Watches","Analog","Lether",750,11,"2023-11-03 18:40:00"],
@@ -483,7 +490,7 @@ def two_categories():
                         cat2_present = True
             if not (cat1_present and cat2_present):
                 user_set.remove(user)
-        print(user_set)
+
 
         filtered_users = User.query.filter(User.u_id.in_(user_set)).all()
         filtered_users = [
@@ -495,7 +502,7 @@ def two_categories():
             for user in filtered_users
         ]
         response_data = json.dumps(filtered_users, indent=4, ensure_ascii=False, default=datetime_serializer)
-        # response_data = json.dumps(serialized_items, indent=4, ensure_ascii=False, sort_keys=False, default=datetime_serializer)
+
 
         return response_data
 
@@ -560,7 +567,7 @@ def users_most_items_on_date():
     ).group_by(User).order_by(func.count(Item.item_id).desc()).all()
 
     # Check if there is a tie
-    # print(f.jsonify((result[0])))
+
 
     max_item_count = result[0].item_count
     top_users = [(user.firstname) for user in result if user.item_count == max_item_count]
@@ -586,6 +593,7 @@ def get_favorite_by_two_users():
         filtered_users = User.query.filter(User.username.in_(user_set)).all()
         a=[]
         if filtered_users[0].favorite_user == filtered_users[1].favorite_user:
+            print("Ux: " + userX + " Uy: " + userY + " fav: " + str(filtered_users[0].favorite_user))
             user = User.query.filter_by(u_id=filtered_users[0].favorite_user).first()
             a.append({"au_id":user.u_id, "bfirstname": user.firstname, "clastname": user.lastname})
             return f.jsonify(a)
@@ -613,17 +621,17 @@ def never_post_excellent():
                 count=count+1
         no_excellent[item]=count    
 
-    print(no_excellent)
+
     itemList=[]
     key_list=list(no_excellent.keys())        
-    print(key_list)
+
     i=0                    
     for i in key_list:
         if(no_excellent[i]>=3):
             continue
         else:
             itemList.append(i)            
-    print(itemList)
+
     user_list=[]
     j=0
     A=[]
@@ -631,9 +639,8 @@ def never_post_excellent():
         for j in range(0,len(itemList)):
             if item.item_id==itemList[j]:
                 A.append(item.u_id)
-    print(A)
     A=list(set(A))
-    print("A",A)
+
     excellent=[]
     for user in users:
         for i in range(0,len(A)):
@@ -723,7 +730,7 @@ def never_posted_poor_review():
                
         # Filter items without "poor" reviews
         users = User.query.all()
-        print(id)
+        
         # Fetch all items
         all_items = Item.query.all()
         u_no=[]

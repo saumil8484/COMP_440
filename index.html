@@ -154,11 +154,12 @@
                         console.log(data);
                         if(data.success == false)
                         {
-                            window.alert ("Email or username is already used");
+                            window.alert (data.message);
                             return false;
                         }
                         else if(data.success == true)
                         {
+                            window.alert (data.message);
                             location.reload();
                             return true;
                         }
