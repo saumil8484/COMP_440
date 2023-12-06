@@ -258,11 +258,11 @@ def initilize_Database():
     if f.request.method== 'POST':
 #   ------------------------------------User Table-----------------------------------------------------------
        
-            userinsert=[[1,"qJohn","qJohn123","qJohn@gmail.com","John","Smith", 3,"2023-12-03 08:40:00"],
-                        [2,"Mary","Mary1","Mary@gmail.com","Mary","Johnson",  3,"2023-11-02 10:40:00"],
-                        [3,"Alex","Alex2","Alex@gmail.com","Alex","Williams", 4,"2023-10-30 18:40:00"],
-                        [4,"David","David3","David@gmail.com","David","Brown", 1,"2023-10-31 11:40:00"],
-                        [5,"wEmily","wEmily112","wEmily@gmail.com","Emily","Davis", 4,"2023-12-01 15:40:00"],
+            userinsert=[[11,"John","John123","John@gmail.com","John","Smith", 3,"2023-12-03 08:40:00"],
+                        [12,"Mary","Mary1","Mary@gmail.com","Mary","Johnson",  3,"2023-11-02 10:40:00"],
+                        [13,"Alex","Alex2","Alex@gmail.com","Alex","Williams", 4,"2023-10-30 18:40:00"],
+                        [14,"David","David3","David@gmail.com","David","Brown", 1,"2023-10-31 11:40:00"],
+                        [15,"Emily","Emily112","Emily@gmail.com","Emily","Davis", 4,"2023-12-01 15:40:00"],
             ]
 
             for i in range(0,len(userinsert)):
@@ -281,16 +281,17 @@ def initilize_Database():
             print(newUser)
 
         #   ------------------------------------ Items Table---------------------------------------------------------
-            itemsInsert=[[1,"Watch","Analog Watch","Watches","Analog","Lether",750,1,"2023-11-03 18:40:00"],
-                        [3,"Smartphone","This is new iPhone 15.","Electronics","Cellphone","Apple",1050,2,"2023-11-02 11:40:00"],
-                        [4,"Shoes","All New authentic Jordan 1","Shoes","Nike","Jordan",250,3,"2023-10-30 19:40:00"],
-                        [5,"Shoe","New Designs for Air force ","Shoes","Nike","Air Force",80,3,"2023-10-30 18:40:00"],
-                        [6,"Furniture","Stylish Modern table Designed by professional","Furniture","Tables","Wooden",200,4,"2023-10-31 13:40:00"],
-                        [7,"Games","Latest games for PC, Xbox and PS5","Games","FPS","RPG",50,5,"2023-11-01 17:40:00"],
-                        [2,"Shirts","top Shirts","Cloths","Shirt","Cotton",5,1,"2023-11-12 17:40:00"],
-                        [8,"AF 07","triple white","Shoes","Nike","Air Force",5,1,"2023-11-12 17:40:00"],
-                        [9,"RL Shirts","top Shirts","Cloths","Shirt","Cotton",5,2,"2023-11-12 17:40:00"],
-                        [10,"AF 08","triple black","Shoes","Nike","Air Force",5,2,"2023-11-12 17:40:00"],
+            itemsInsert=[[1,"Watch","Analog Watch","Watches","Analog","Lether",750,11,"2023-11-03 18:40:00"],
+                        [3,"Smartphone","This is new iPhone 15.","Electronics","Cellphone","Apple",1050,12,"2023-11-02 11:40:00"],
+                        [4,"Shoes","All New authentic Jordan 1","Shoes","Nike","Jordan",250,13,"2023-10-30 19:40:00"],
+                        [5,"Shoe","New Designs for Air force ","Shoes","Nike","Air Force",80,13,"2023-10-30 18:40:00"],
+                        [6,"Furniture","Stylish Modern table Designed by professional","Furniture","Tables","Wooden",200,14,"2023-10-31 13:40:00"],
+                        [7,"Games","Latest games for PC, Xbox and PS5","Games","FPS","RPG",50,15,"2023-11-01 17:40:00"],
+                        [2,"Shirts","top Shirts","Cloths","Shirt","Cotton",5,11,"2023-11-12 17:40:00"],
+                        [8,"AF 07","triple white","Shoes","Nike","Air Force",5,11,"2023-11-12 17:40:00"],
+                        [9,"RL Shirts","top Shirts","Cloths","Shirt","Cotton",5,12,"2023-11-12 17:40:00"],
+                        [10,"AF 08","triple black","Shoes","Nike","Air Force",5,12,"2023-11-12 17:40:00"],
+                        [11,"Running Shoes ","White Strips","Shoes","Adidas","Runfalcon",500,14,"2023-11-12 18:40:00"]
                         ]
             i=0
 
@@ -311,11 +312,19 @@ def initilize_Database():
 
 
         #   ------------------------------------ Review Table--------------------------------------------------------
-            reviewInsert=[[1,"Excellent","Best Quality and Great Service",4,3,"2023-11-2 12:40:00"],
-                        [2,"Good","Good Quality",3,5,"2023-11-3 14:40:00"],
-                        [3,"Good","Not Great Quality but Good Service",7,4,"2023-11-4 19:40:00"],
-                        [4,"Fair","Good Quality but Not so good Service",5,4,"2023-11-4 20:40:00"],
-                        [5,"Poor","Disapointing Service",6,1,"2023-11-5 17:40:00"]
+            reviewInsert=[[1,"Excellent","Best Quality and Great Service",4,13,"2023-11-2 12:40:00"],
+                        [2,"Good","Good Quality",3,15,"2023-11-3 14:40:00"],
+                        [3,"Good","Not Great Quality but Good Service",7,14,"2023-11-4 19:40:00"],
+                        [4,"Fair","Good Quality but Not so good Service",5,14,"2023-11-4 20:40:00"],
+                        [5,"Poor","Disapointing Service",6,11,"2023-11-5 17:40:00"],
+                        [6,"Excellent","wow ",2,13,"2023-11-03 10:40:00"],
+                        [7,"Excellent","What",3,15,"2023-11-03 14:40:00"],
+                        [8,"Excellent","Come on",3,13,"2023-11-03 12:40:00"],
+                        [9,"Excellent","LOL ",7,14,"2023-11-04 12:40:00"],
+                        [10,"Excellent","Fine ",6,15,"2023-11-05 12:40:00"],
+                        [11,"Excellent","Amazing ",3,11,"2023-11-07 12:40:00"],
+                        [12,"Poor","Disapointing Shoes",11,12,"2023-11-03 18:23:00"],
+                        [13,"Poor","Disapointing Service",6,12,"2023-11-04 13:16:00"]
                         ]
             i=0
 
@@ -333,11 +342,11 @@ def initilize_Database():
  
 
         #   ------------------------------------ ActionCounter Table-------------------------------------------------
-            ActionInsert=[[1,1,2,"2023-11-03 19:40:00",1,"2023-11-5 17:40:00"],
-                        [2,2,1,"2023-11-02 11:40:00",2,"2023-11-8 15:09:08"],
-                        [3,3,2,"2023-10-30 19:40:00",1,"2023-11-2 12:40:00"],
-                        [4,4,1,"2023-10-31 13:40:00",2,"2023-11-4 20:40:00"],
-                        [5,5,1,"2023-11-01 17:40:00",1,"2023-11-3 14:40:00"]
+            ActionInsert=[[1,11,2,"2023-11-03 19:40:00",1,"2023-11-5 17:40:00"],
+                        [2,12,1,"2023-11-02 11:40:00",2,"2023-11-8 15:09:08"],
+                        [3,13,2,"2023-10-30 19:40:00",1,"2023-11-2 12:40:00"],
+                        [4,14,1,"2023-10-31 13:40:00",2,"2023-11-4 20:40:00"],
+                        [5,15,1,"2023-11-01 17:40:00",1,"2023-11-3 14:40:00"]
                         ]
             i=0
 
