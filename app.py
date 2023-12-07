@@ -212,7 +212,7 @@ def addItems():
         if action_counter:
           # Get the current date and time
           current_datetime = datetime.now()
-        
+          print("current_datetime",current_datetime)
           # Extract the current date (midnight) and the end of the day (23:59:59)
           current_date = current_datetime.date()
           start_of_day = datetime.combine(current_date, time.min)
@@ -220,8 +220,9 @@ def addItems():
 
           # check if post was today
           post_was_today = start_of_day <= action_counter.first_item_time <= end_of_day
-          
-          if action_counter.daily_item_count >= 3 and post_was_today:
+          print("post_was_today",post_was_today)
+          if action_counter.daily_item_count >= 2 and post_was_today:
+              print("daily_item_count",action_counter.daily_item_count)
               
               return f.jsonify(message="You have reached the limit of item that can be posted in a day", success=False)
         
@@ -298,7 +299,7 @@ def initilize_Database():
                         [8,"AF 07","triple white","Shoes","Nike","Air Force",5,11,"2023-11-12 17:40:00"],
                         [9,"RL Shirts","top Shirts","Cloths","Shirt","Cotton",5,12,"2023-11-12 17:40:00"],
                         [10,"AF 08","triple black","Shoes","Nike","Air Force",5,12,"2023-11-12 17:40:00"],
-                        [11,"Running Shoes ","White Strips","Shoes","Adidas","Runfalcon",500,14,"2023-11-12 18:40:00"]
+                        [11,"Running Shoes ","White Strips","Shoes","Adidas","Runfalcon",500,13,"2023-11-12 18:40:00"]
                         ]
             i=0
 
@@ -611,8 +612,7 @@ def never_post_excellent():
     id_no_excellent_reviews = {review.item_id for review in all_reviews if review.rating.lower() =='excellent'}
     # get count of Excellent
     no_excellent= dict()
-    user_name=[]
-    user_Lname=[]
+
     count=0
     for item in id_no_excellent_reviews:
         count=0
@@ -714,8 +714,12 @@ def never_posted_poor_review():
             
         # Fetch all reviews
         all_reviews = Review.query.all()
+        all_items = Item.query.all()
+        users = User.query.all()
         No_allow=[]
         id_no_poor_reviews=[]
+        uid_no_poor_reviews=[]
+        No_allow2=[]
 
         # Get item IDs with "poor" reviews
         for review in all_reviews:
@@ -723,38 +727,55 @@ def never_posted_poor_review():
                 id_no_poor_reviews.append(review.item_id)
             else:
                 No_allow.append(review.item_id)
-        for no in No_allow:
-            for id in id_no_poor_reviews:
-                if no==id:
-                    id_no_poor_reviews.remove(id)
-               
-        # Filter items without "poor" reviews
-        users = User.query.all()
+
+        # print("",)
+        print("id_no_poor_reviews",set(id_no_poor_reviews))
+        print("No_allow",set(No_allow))
         
-        # Fetch all items
-        all_items = Item.query.all()
-        u_no=[]
-        F=[]
-        Item_and_User = dict()
-        # Adding item id as key and U_id as value
-        for i in all_items:
-            Item_and_User[i.item_id]= i.u_id
-        # creating a list that contains U_ID that has posted items and has no poor review    
-        for key in Item_and_User:
-            for item_id in id_no_poor_reviews:
-                if key == item_id:
+        for item in all_items:
+            for i in id_no_poor_reviews:
+                if (item.item_id == i  ):
+                    uid_no_poor_reviews.append(item.u_id)
+            for j in No_allow:
+                if (j==item.item_id):
+                    No_allow2.append(item.u_id)
+        print("uid_no_poor_reviews",set(uid_no_poor_reviews))
+        print("No_allow2",set(No_allow2))       
+                
+        # result = list(filter(lambda x: x not in uid_no_poor_reviews, No_allow2))
+        result = [item for item in uid_no_poor_reviews if item not in No_allow2]       
+
+
+        print("no_poor_review",set(result))            
+        
+               
+        # # Filter items without "poor" reviews
+        # 
+        
+        # # Fetch all items
+        # all_items = Item.query.all()
+        # u_no=[]
+        # F=[]
+        # Item_and_User = dict()
+        # # Adding item id as key and U_id as value
+        # for i in all_items:
+        #     Item_and_User[i.item_id]= i.u_id
+        # # creating a list that contains U_ID that has posted items and has no poor review    
+        # for key in Item_and_User:
+        #     for item_id in result:
+        #         if key == item_id:
                     
-                    u_no.append(Item_and_User[item_id])
-                else:
-                    F.append(Item_and_User[item_id])
+        #             u_no.append(Item_and_User[item_id])
+        #         else:
+        #             F.append(Item_and_User[item_id])
 
         
         never_posted_poor_review=[]
-        
-        u_no=list(set(u_no))
+        result=list(set(result))
+        # u_no=list(set(u_no))
         # Creating a list that contains firstname of user from U_No
         for user in users:
-            for i in u_no:
+            for i in result:
                 if(user.u_id==i):
                      if i in never_posted_poor_review:
                         continue
@@ -773,7 +794,7 @@ def excellent_review_user_pairs():
     all_items = Item.query.all()
     all_reviews = Review.query.all()
     # Create a list to store user pairs with excellent reviews
-    excellent_review_pairs = []
+
     #all dictionaries
     exc_item_user=dict()
     lol=dict()
